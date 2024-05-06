@@ -1,4 +1,4 @@
-package com.example.proyectobancobases1;
+package com.example.proyectobancobases1.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
