@@ -9,4 +9,11 @@ public class Banco {
     private ArrayList<Municipio> municipiosConSede;
     private ArrayList<Empleado> empleados;
     private ArrayList<Sucursal> sucursales;
+    private ArrayList<String> tiposMunicipios;
+    private ArrayList<Usuario> usuarios;
+
+
+    public void prueba(){
+
+    }
 }
