@@ -1,13 +1,15 @@
 package com.example.proyectobancobases1.model;
 
+import java.util.ArrayList;
+
 public class Departamento {
     private String codigo, nombre;
-    private Municipio municipio;
+    private ArrayList<Municipio> municipios;
 
-    public Departamento(String codigo, String nombre, Municipio municipio) {
+    public Departamento(String codigo, String nombre, ArrayList<Municipio> municipios) {
         this.codigo = codigo;
         this.nombre = nombre;
-        this.municipio = municipio;
+        this.municipios = municipios;
     }
 
     public String getCodigo() {
@@ -26,11 +28,11 @@ public class Departamento {
         this.nombre = nombre;
     }
 
-    public Municipio getMunicipio() {
-        return municipio;
+    public ArrayList<Municipio> getMunicipios() {
+        return municipios;
     }
 
-    public void setMunicipio(Municipio municipio) {
-        this.municipio = municipio;
+    public void setMunicipios(ArrayList<Municipio> municipios) {
+        this.municipios = municipios;
     }
 }

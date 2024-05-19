@@ -1,10 +1,11 @@
 package com.example.proyectobancobases1.model;
 
 public class Empleado {
-    private String codigo,cedula,nombre,direccion,telefono,profesion;
+    private String codigo,cedula,nombre,direccion,telefono;
+    private Profesion profesion;
     private Contrato contrato;
 
-    public Empleado(String codigo, String cedula, String nombre, String direccion, String telefono, String profesion, Contrato contrato) {
+    public Empleado(String codigo, String cedula, String nombre, String direccion, String telefono, Profesion profesion, Contrato contrato) {
         this.codigo = codigo;
         this.cedula = cedula;
         this.nombre = nombre;
@@ -65,11 +66,11 @@ public class Empleado {
         this.telefono = telefono;
     }
 
-    public String getProfesion() {
+    public Profesion getProfesion() {
         return profesion;
     }
 
-    public void setProfesion(String profesion) {
+    public void setProfesion(Profesion profesion) {
         this.profesion = profesion;
     }
 

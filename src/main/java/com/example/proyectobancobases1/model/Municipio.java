@@ -1,11 +1,10 @@
 package com.example.proyectobancobases1.model;
 
 public class Municipio {
-    private String codigo,nombre,poblacion;
+    private String codigo,nombre,poblacion,tipoMunicipio;
     private Departamento departamento;
-    private TipoMunicipio tipoMunicipio;
 
-    public Municipio(String codigo, String nombre, String poblacion, TipoMunicipio tipoMunicipio, Departamento departamento) {
+    public Municipio(String codigo, String nombre, String poblacion, String tipoMunicipio, Departamento departamento) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.poblacion = poblacion;
@@ -48,11 +47,11 @@ public class Municipio {
         this.poblacion = poblacion;
     }
 
-    public TipoMunicipio getTipoMunicipio() {
+    public String getTipoMunicipio() {
         return tipoMunicipio;
     }
 
-    public void setTipoMunicipio(TipoMunicipio tipoMunicipio) {
+    public void setTipoMunicipio(String tipoMunicipio) {
         this.tipoMunicipio = tipoMunicipio;
     }
 }
