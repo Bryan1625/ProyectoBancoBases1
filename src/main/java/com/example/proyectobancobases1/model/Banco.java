@@ -93,6 +93,10 @@ public class Banco {
         tiposMunicipios.remove(tipoMunicipio);
     }
 
+    public void actualizarDepartamentoConSede(Departamento departamento, Departamento nuevo){
+        departamento = nuevo;
+    }
+
     public void actualizarTipoMunicipio(TipoMunicipio tipoMunicipio, TipoMunicipio nuevo) {
         tipoMunicipio = nuevo;
     }
