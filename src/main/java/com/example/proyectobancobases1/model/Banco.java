@@ -1,6 +1,12 @@
 package com.example.proyectobancobases1.model;
 
 import java.util.ArrayList;
+import com.example.proyectobancobases1.util.BaseDeDatosUtil;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class Banco {
     private ArrayList<Cargo> cargos;
@@ -35,6 +41,33 @@ public class Banco {
 
     public void agregarCargo(Cargo cargo) {
         cargos.add(cargo);
+        agregarCargoDataBase(cargo);
+    }
+
+    public void agregarCargoDataBase(Cargo cargo) {
+        String sql = "INSERT INTO TCargo (CCodigo, CNombre, CSalario) VALUES (?, ?, ?)";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+            declaracion.setString(1, cargo.getCodigo());
+            declaracion.setString(2, cargo.getNombre());
+            declaracion.setDouble(3, cargo.getSalario());
+            declaracion.executeUpdate();
+            cargos.add(cargo);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void eliminarCargoDataBase(Cargo cargo) {
+        String sql = "DELETE FROM TCargo WHERE CCodigo = ?";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+            declaracion.setString(1, cargo.getCodigo());
+            declaracion.executeUpdate();
+            cargos.remove(cargo);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void agregarContrato(Contrato contrato) {
@@ -67,6 +100,7 @@ public class Banco {
 
     public void eliminarCargo(Cargo cargo) {
         cargos.remove(cargo);
+        eliminarCargoDataBase(cargo);
     }
     public void eliminarCargoConCodigo(String codigo) {
         Cargo cargo = buscarCargo(codigo);

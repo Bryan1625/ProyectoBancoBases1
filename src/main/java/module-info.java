@@ -3,6 +3,7 @@ module com.example.proyectobancobases1 {
     requires javafx.fxml;
     requires poi;
     requires poi.ooxml;
+    requires java.sql;
 
 
     opens com.example.proyectobancobases1 to javafx.fxml;
