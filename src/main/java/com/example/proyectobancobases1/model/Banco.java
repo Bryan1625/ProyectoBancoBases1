@@ -68,40 +68,93 @@ public class Banco {
     public void eliminarCargo(Cargo cargo) {
         cargos.remove(cargo);
     }
+    public void eliminarCargoConCodigo(String codigo) {
+        Cargo cargo = buscarCargo(codigo);
+        if(cargo != null){
+            eliminarCargo(cargo);
+        }
+    }
 
     public void eliminarContrato(Contrato contrato) {
         contratos.remove(contrato);
+    }
+    public void eliminarContratoConCodigo(String codigo) {
+        Contrato contrato = buscarContrato(codigo);
+        if(contrato != null){
+            eliminarContrato(contrato);
+        }
     }
 
     public void eliminarDepartamentoConSede(Departamento departamento) {
         departamentosConSede.remove(departamento);
     }
-
+    public void eliminarDepartamentoConSedeConCodigo(String codigo) {
+        Departamento departamento = buscarDepartamentoConSede(codigo);
+        if(departamento != null){
+            eliminarDepartamentoConSede(departamento);
+        }
+    }
     public void eliminarMunicipioConSede(Municipio municipio) {
         municipiosConSede.remove(municipio);
+    }
+    public void eliminarMunicipioConSedeConCodigo(String codigo) {
+        Municipio municipio = buscarMunicipio(codigo);
+        if(municipio != null){
+            eliminarMunicipioConSede(municipio);
+        }
     }
 
     public void eliminarEmpleado(Empleado empleado) {
         empleados.remove(empleado);
     }
+    public void eliminarEmpleadoConCodigo(String codigo) {
+        Empleado empleado = buscarEmpleado(codigo);
+        if(empleado != null){
+            eliminarEmpleado(empleado);
+        }
+    }
 
     public void eliminarSucursal(Sucursal sucursal) {
         sucursales.remove(sucursal);
     }
+    public void eliminarSucursalConCodigo(String codigo) {
+        Sucursal sucursal = buscarSucursal(codigo);
+        if(sucursal != null){
+            eliminarSucursal(sucursal);
+        }
+    }
 
     public void eliminarTipoMunicipio(TipoMunicipio tipoMunicipio) {
         tiposMunicipios.remove(tipoMunicipio);
+    }
+    public void eliminarTipoMunicipioConCodigo(String codigo) {
+        TipoMunicipio tipoMunicipio = buscarTipoMunicipio(codigo);
+        if(tipoMunicipio != null){
+            eliminarTipoMunicipio(tipoMunicipio);
+        }
     }
 
     public void actualizarDepartamentoConSede(Departamento departamento, Departamento nuevo){
         departamento = nuevo;
     }
 
+    public Departamento buscarDepartamentoConSede(String codigo){
+        boolean encontrado = false;
+        Departamento buscado = null;
+        for (int i = 0; i < departamentosConSede.size() && !encontrado; i++) {
+            if (departamentosConSede.get(i).getCodigo().contentEquals(codigo)) {
+                encontrado = true;
+                buscado = departamentosConSede.get(i);
+            }
+        }
+        return buscado;
+    }
+
     public void actualizarTipoMunicipio(TipoMunicipio tipoMunicipio, TipoMunicipio nuevo) {
         tipoMunicipio = nuevo;
     }
 
-    public TipoMunicipio buscarTipoMunicipio(TipoMunicipio tipoMunicipio, String codigo) {
+    public TipoMunicipio buscarTipoMunicipio(String codigo) {
         boolean encontrado = false;
         TipoMunicipio buscado = null;
         for (int i = 0; i < tiposMunicipios.size() && !encontrado; i++) {
@@ -229,6 +282,12 @@ public class Banco {
     public void eliminarUsuario(Usuario usuario) {
         usuarios.remove(usuario);
     }
+    public void eliminarUsuarioConNombre(String nombre) {
+        Usuario usuario = buscarUsuario(nombre);
+        if(usuario != null){
+            eliminarUsuario(usuario);
+        }
+    }
 
     public ArrayList<Cargo> getCargos() {
         return cargos;
@@ -300,5 +359,11 @@ public class Banco {
 
     public void eliminarProfesion(Profesion profesion){
         profesiones.remove(profesion);
+    }
+    public void eliminarProfesionConCodigo(String codigo){
+        Profesion profesion = buscarProfesion(codigo);
+        if(profesion != null){
+            eliminarProfesion(profesion);
+        }
     }
 }
