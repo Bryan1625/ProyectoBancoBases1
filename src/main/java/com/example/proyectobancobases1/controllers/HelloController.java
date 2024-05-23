@@ -11,8 +11,8 @@ import java.util.ArrayList;
 public class HelloController {
 
     @FXML
-    private void initialize(){
-        TipoMuNombreMunicipio.getItems().addAll("Grande","Mediano","Pequeño");
+    private void initialize() {
+        TipoMuNombreMunicipio.getItems().addAll("Grande", "Mediano", "Pequeño");
         TipoMuNombreMunicipio.setValue("Pequeño");
 
     }
@@ -201,24 +201,50 @@ public class HelloController {
 
     @FXML
     private AnchorPane AnchorCargos;
+    @FXML
+    private TextField CarCodigoCargo;
+    @FXML
+    private TextField CarNombreCargo;
+    @FXML
+    private TextField CarSalarioCargo;
 
     //ANCHOR PROFESIONES
 
     @FXML
     private AnchorPane AnchorProfesiones;
+    @FXML
+    private TextField ProfCodigoCargo;
+    @FXML
+    private TextField ProfNombreProfesion;
 
     //ANCHOR EMPLEADOS
 
     @FXML
     private AnchorPane AnchorEmpleados;
-
+    @FXML
+    private TextField EmpleCodigoCargo;
+    @FXML
+    private TextField EmpleCedulaEmpleado;
+    @FXML
+    private TextField EmpleNombreEmpleado;
+    @FXML
+    private TextField EmpleDireccionEmpleado;
+    @FXML
+    private TextField EmpleTelefonoEmpleado;
+    @FXML
+    private ChoiceBox EmpleProfesionEmpleado;
+    @FXML
+    private ChoiceBox EmpleGeneroEmpleado;
+    @FXML
+    private DatePicker EmpleFechaNacimiento;
+    @FXML
+    private TextField EmpleEdadEmpleado;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     //METODOS INICIO SESION
     @FXML
     private void HandleNombre() {
-        System.out.println("Inicio Sesion");
     }
 
     @FXML
@@ -231,41 +257,42 @@ public class HelloController {
         PaneInicioSesion.setVisible(false);
     }
 
+    private void MovPrincipal (Pane pane){
+        PanePrincipal.setVisible(false);
+        pane.setVisible(true);
+    }
+
     //METODOS PANEL PRINCIPAL
 
     @FXML
     private void HandleEntidades() {
 
-        PaneEntidades.setVisible(true);
-        PanePrincipal.setVisible(false);
+        MovPrincipal(PaneEntidades);
     }
 
     @FXML
     private void HandleTransacciones() {
 
-        PaneTransacciones.setVisible(true);
-        PanePrincipal.setVisible(false);
+        MovPrincipal(PaneTransacciones);
     }
 
     @FXML
     private void HandleReportes() {
 
-        PaneReportes.setVisible(true);
-        PanePrincipal.setVisible(false);
+        MovPrincipal(PaneReportes);
     }
 
     @FXML
     private void HandleUtilidades() {
 
-        PaneUtilidades.setVisible(true);
-        PanePrincipal.setVisible(false);
+        MovPrincipal(PaneUtilidades);
     }
 
     @FXML
     private void HandleAyudas() {
 
     }
-
+                //METODOS DE SALIDA DE LOS PANELES
     @FXML
     private void BackEntPrincipal(){
 
@@ -299,55 +326,53 @@ public class HelloController {
 
     //METODOS PANEL ENTIDADES
 
+    private void MovEntidades(AnchorPane pane){
+        PaneFormulariosEntidades.setVisible(true);
+        pane.setVisible(true);
+    }
+
     @FXML
     private void HandleDepartamentos() {
 
-        PaneFormulariosEntidades.setVisible(true);
-        AnchorDepartamentos.setVisible(true);
+        MovEntidades(AnchorDepartamentos);
 
     }
 
     @FXML
     private void HandleTipoMunicipio() {
 
-        PaneFormulariosEntidades.setVisible(true);
-        AnchorTipoMunicipio.setVisible(true);
+        MovEntidades(AnchorTipoMunicipio);
 
     }
 
     @FXML
     private void HandleMunicipio() {
 
-        PaneFormulariosEntidades.setVisible(true);
-        AnchorMunicipio.setVisible(true);
+        MovEntidades(AnchorMunicipio);
     }
 
     @FXML
     private void HandleSucursales() {
 
-        PaneFormulariosEntidades.setVisible(true);
-        AnchorSucursales.setVisible(true);
+        MovEntidades(AnchorSucursales);
     }
 
     @FXML
     private void HandleCargos() {
 
-        PaneFormulariosEntidades.setVisible(true);
-        AnchorCargos.setVisible(true);
+        MovEntidades(AnchorCargos);
     }
 
     @FXML
     private void HandleProfesiones() {
 
-        PaneFormulariosEntidades.setVisible(true);
-        AnchorProfesiones.setVisible(true);
+        MovEntidades(AnchorProfesiones);
     }
 
     @FXML
     private void HandleEmpleados() {
 
-        PaneFormulariosEntidades.setVisible(true);
-        AnchorEmpleados.setVisible(true);
+        MovEntidades(AnchorEmpleados);
     }
 
     //METODOS FORMULARIO
@@ -359,6 +384,7 @@ public class HelloController {
         pane.setVisible(false);
     }
 
+           //METODOS SALIDAS DE FORMULARIOS
     @FXML
     private void BackDepartamentos(){
         BackOptionFormularios(AnchorDepartamentos);
@@ -633,6 +659,5 @@ public class HelloController {
     private void SucBtnBuscar(){
 
     }
-
 
 }
