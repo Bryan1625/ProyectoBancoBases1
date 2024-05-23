@@ -2,15 +2,15 @@ package com.example.proyectobancobases1.model;
 
 public class Sucursal {
     private String codigo,nombre;
-    private Municipio municipio;
-    private Empleado director;
-    private double presupuestoAnual;
+    private String municipio;
+    private String departamento;
+    private int presupuestoAnual;
 
-    public Sucursal(String codigo, String nombre, Municipio municipio, Empleado director, double presupuestoAnual) {
+    public Sucursal(String codigo, String nombre, String municipio, String departamento, int presupuestoAnual) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.municipio = municipio;
-        this.director = director;
+        this.departamento = departamento;
         this.presupuestoAnual = presupuestoAnual;
     }
 
@@ -33,27 +33,27 @@ public class Sucursal {
         this.nombre = nombre;
     }
 
-    public Municipio getMunicipio() {
+    public String getMunicipio() {
         return municipio;
     }
 
-    public void setMunicipio(Municipio municipio) {
+    public void setMunicipio(String municipio) {
         this.municipio = municipio;
     }
 
-    public Empleado getDirector() {
-        return director;
+    public String getDepartamento() {
+        return departamento;
     }
 
-    public void setDirector(Empleado director) {
-        this.director = director;
+    public void setDepartamento(String departamento) {
+        this.departamento = departamento;
     }
 
     public double getPresupuestoAnual() {
         return presupuestoAnual;
     }
 
-    public void setPresupuestoAnual(double presupuestoAnual) {
+    public void setPresupuestoAnual(int presupuestoAnual) {
         this.presupuestoAnual = presupuestoAnual;
     }
 }

@@ -1,9 +1,6 @@
 package com.example.proyectobancobases1.controllers;
 
-import com.example.proyectobancobases1.model.Banco;
-import com.example.proyectobancobases1.model.Departamento;
-import com.example.proyectobancobases1.model.Municipio;
-import com.example.proyectobancobases1.model.TipoMunicipio;
+import com.example.proyectobancobases1.model.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -184,6 +181,21 @@ public class HelloController {
 
     @FXML
     private AnchorPane AnchorSucursales;
+    @FXML
+    private TextField SucCodigoSucursal;
+    @FXML
+    private TextField SucNombreSucursal;
+    @FXML
+    private TextField SucDireccionSucursal;
+    @FXML
+    private TextField SucTelefonoSucursal;
+    @FXML
+    private ChoiceBox SucMunicipioSucursal;
+    @FXML
+    private ChoiceBox SucDepartamentoSucursal;
+    @FXML
+    private TextField SucPresupuestoAsignado;
+
 
     //ANCHOR CARGOS
 
@@ -436,11 +448,14 @@ public class HelloController {
         ArrayList<Departamento> Departamentos = BancoABC.getDepartamentosConSede();
 
         MunDepartamentoUbicacion.getItems().clear();
+        SucDepartamentoSucursal.getItems().clear();
 
         for (int i = 0; i < Departamentos.size();i++){
 
             MunDepartamentoUbicacion.getItems().add(Departamentos.get(i).getNombre());
             MunDepartamentoUbicacion.setValue(Departamentos.get(i).getNombre());
+            SucDepartamentoSucursal.getItems().add(Departamentos.get(i).getNombre());
+            SucDepartamentoSucursal.setValue(Departamentos.get(i).getNombre());
 
         }
 
@@ -531,6 +546,8 @@ public class HelloController {
 
         BancoABC.agregarMunicipioConSede(NuevoMunicipio);
 
+        RecorrerMunicipios();
+
         for (int i =0; i< BancoABC.getMunicipiosConSede().size();i++){
             System.out.println("Municipio: "+BancoABC.getMunicipiosConSede().get(i));
 
@@ -553,5 +570,69 @@ public class HelloController {
     private void MunBtnBuscar(){
 
     }
+
+    private void RecorrerMunicipios (){//RECORRRE LOS TIPOS EXISTENTES PARA PONERLO EN LAS CHOICE BOX
+
+        ArrayList<Municipio> Municipios = BancoABC.getMunicipiosConSede();
+        SucMunicipioSucursal.getItems().clear();
+
+        for (int i = 0; i < Municipios.size();i++){
+
+            SucMunicipioSucursal.getItems().add(Municipios.get(i).getNombre());
+            SucMunicipioSucursal.setValue(Municipios.get(i).getNombre());
+
+        }
+    }
+
+    //METODOS FORMULARIOS SUCURSAL
+
+    private String codigoSucursal;
+    private String nombreSucursal;
+    private String direccionSucursal;
+    private String telefonoSucursal;
+    private String municipioSucursal;
+    private String departamentoSucursal;
+    private int presupuestoAsignado;
+
+    private void GetDataSuc (){
+
+        codigoSucursal = SucCodigoSucursal.getText();
+        nombreSucursal = SucNombreSucursal.getText();
+        direccionSucursal = SucDireccionSucursal.getText();
+        telefonoSucursal = SucTelefonoSucursal.getText();
+        municipioSucursal = SucMunicipioSucursal.getValue().toString();
+        departamentoSucursal = SucDepartamentoSucursal.getValue().toString();
+        presupuestoAsignado = Integer.parseInt(SucPresupuestoAsignado.getText());
+    }
+
+    @FXML
+    private void SucBtnGuardar(){
+
+        GetDataSuc();
+
+        Sucursal NuevaSucursal = new Sucursal(codigoSucursal,nombreSucursal,municipioSucursal,departamentoSucursal,presupuestoAsignado);
+
+        BancoABC.agregarSucursal(NuevaSucursal);
+
+        for (int i =0; i< BancoABC.getSucursales().size();i++){
+            System.out.println("Sucursales: "+BancoABC.getSucursales().get(i));
+
+            System.out.println("Sucursales: "+BancoABC.getSucursales().get(i).getCodigo());
+            System.out.println("Nombre: "+BancoABC.getSucursales().get(i).getNombre());
+        }
+    }
+    @FXML
+    private void SucBtnEliminar(){
+
+    }
+    @FXML
+    private void SucBtnEditar(){
+
+    }
+    @FXML
+    private void SucBtnBuscar(){
+
+    }
+
 
 }
