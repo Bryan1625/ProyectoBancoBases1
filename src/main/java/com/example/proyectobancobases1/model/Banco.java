@@ -40,8 +40,8 @@ public class Banco {
     }
 
     public void agregarCargo(Cargo cargo) {
-        cargos.add(cargo);
         agregarCargoDataBase(cargo);
+        cargos.add(cargo);
     }
 
     public void agregarCargoDataBase(Cargo cargo) {
@@ -52,7 +52,6 @@ public class Banco {
             declaracion.setString(2, cargo.getNombre());
             declaracion.setDouble(3, cargo.getSalario());
             declaracion.executeUpdate();
-            cargos.add(cargo);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -64,7 +63,6 @@ public class Banco {
              PreparedStatement declaracion = conexion.prepareStatement(sql)) {
             declaracion.setString(1, cargo.getCodigo());
             declaracion.executeUpdate();
-            cargos.remove(cargo);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -99,8 +97,8 @@ public class Banco {
     }
 
     public void eliminarCargo(Cargo cargo) {
-        cargos.remove(cargo);
         eliminarCargoDataBase(cargo);
+        cargos.remove(cargo);
     }
     public void eliminarCargoConCodigo(String codigo) {
         Cargo cargo = buscarCargo(codigo);
