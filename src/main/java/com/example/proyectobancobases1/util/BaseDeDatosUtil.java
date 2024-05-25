@@ -7,7 +7,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class BaseDeDatosUtil {
-    private static final String RUTA_BASE_DATOS = "src/main/resources/DataBase.accdb";
+    private static final String RUTA_BASE_DATOS = "/DataBase.accdb";
 
     public static Connection obtenerConexion() throws SQLException {
         try {
@@ -17,9 +17,15 @@ public class BaseDeDatosUtil {
             }
             String rutaBaseDatos = new java.io.File(resource.toURI()).getAbsolutePath();
             String urlConexion = "jdbc:ucanaccess://" + rutaBaseDatos;
-            return DriverManager.getConnection(urlConexion);
+            Connection conexion = DriverManager.getConnection(urlConexion);
+
+            // Asegurarse de que la conexión no esté en modo autocommit
+            conexion.setAutoCommit(false);
+
+            return conexion;
         } catch (URISyntaxException e) {
             throw new SQLException("Error al convertir la ruta de la base de datos", e);
         }
     }
 }
+

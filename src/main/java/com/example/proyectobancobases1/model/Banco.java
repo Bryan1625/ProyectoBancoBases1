@@ -1,12 +1,8 @@
 package com.example.proyectobancobases1.model;
 
+import java.sql.*;
 import java.util.ArrayList;
 import com.example.proyectobancobases1.util.BaseDeDatosUtil;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class Banco {
     private ArrayList<Cargo> cargos;
@@ -18,6 +14,61 @@ public class Banco {
     private ArrayList<TipoMunicipio> tiposMunicipios;
     private ArrayList<Usuario> usuarios;
     private ArrayList<Profesion> profesiones;
+
+    public static void main(String[] args) {
+        Banco banco = new Banco();
+
+        // Verificar cargos antes de la inserción
+        System.out.println("Cargos antes de la inserción:");
+        banco.verificarTablaCargos();
+
+        // Intentar agregar un nuevo cargo
+        Cargo nuevoCargo = new Cargo("5", "NuevoCargo", 5000.0, "Descripción");
+        banco.agregarCargoDataBase(nuevoCargo);
+
+        // Verificar cargos después de la inserción
+        System.out.println("Cargos después de la inserción:");
+        banco.verificarTablaCargos();
+
+        // Verificar el cargo específico recién agregado
+        banco.verificarCargo("5");
+    }
+
+    public void verificarCargo(String codigo) {
+        String sql = "SELECT * FROM TCargo WHERE CCodigo = ?";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+
+            declaracion.setString(1, codigo);
+            ResultSet resultados = declaracion.executeQuery();
+
+            if (resultados.next()) {
+                System.out.println("Cargo encontrado:");
+                System.out.println("Código: " + resultados.getString("CCodigo"));
+                System.out.println("Nombre: " + resultados.getString("CNombre"));
+                System.out.println("Salario: " + resultados.getDouble("CSalario"));
+            } else {
+                System.out.println("No se encontró ningún cargo con el código: " + codigo);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public void verificarTablaCargos() {
+        String sql = "SELECT * FROM TCargo";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             Statement declaracion = conexion.createStatement();
+             ResultSet resultados = declaracion.executeQuery(sql)) {
+
+            while (resultados.next()) {
+                System.out.println("Código: " + resultados.getString("CCodigo"));
+                System.out.println("Nombre: " + resultados.getString("CNombre"));
+                System.out.println("Salario: " + resultados.getDouble("CSalario"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     public Banco() {
         this.cargos = new ArrayList<>();
@@ -46,27 +97,101 @@ public class Banco {
 
     public void agregarCargoDataBase(Cargo cargo) {
         String sql = "INSERT INTO TCargo (CCodigo, CNombre, CSalario) VALUES (?, ?, ?)";
-        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
-             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+        Connection conexion = null;
+        PreparedStatement declaracion = null;
+        try {
+            conexion = BaseDeDatosUtil.obtenerConexion();
+            System.out.println("Conexión establecida con éxito.");
+
+            // Asegurarse de que la conexión no esté en modo autocommit
+            conexion.setAutoCommit(false);
+
+            // Preparar la declaración
+            declaracion = conexion.prepareStatement(sql);
+            System.out.println("Declaración preparada con éxito.");
+
+            // Asignar valores a la declaración preparada
             declaracion.setString(1, cargo.getCodigo());
             declaracion.setString(2, cargo.getNombre());
             declaracion.setDouble(3, cargo.getSalario());
-            declaracion.executeUpdate();
+            System.out.println("Valores asignados a la declaración.");
+
+            // Ejecutar la declaración
+            int filasAfectadas = declaracion.executeUpdate();
+            System.out.println("Declaración ejecutada. Filas afectadas: " + filasAfectadas);
+
+            // Confirmar la transacción manualmente
+            conexion.commit();
+            System.out.println("Transacción confirmada.");
+
+            if (filasAfectadas > 0) {
+                System.out.println("El cargo con código " + cargo.getCodigo() + " ha sido agregado.");
+            } else {
+                System.out.println("No se pudo agregar el cargo con código " + cargo.getCodigo() + ".");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            try {
+                if (conexion != null) {
+                    System.out.println("Intentando revertir la transacción.");
+                    conexion.rollback();
+                    System.out.println("Transacción revertida.");
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        } finally {
+            // Cerrar los recursos
+            if (declaracion != null) {
+                try {
+                    declaracion.close();
+                    System.out.println("Declaración cerrada.");
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (conexion != null) {
+                try {
+                    conexion.close();
+                    System.out.println("Conexión cerrada.");
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+
+    public void eliminarCargoDataBase(Cargo cargo) {
+        String verificarSql = "SELECT 1 FROM TCargo WHERE CCodigo = ?";
+        String eliminarSql = "DELETE FROM TCargo WHERE CCodigo = ?";
+
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion()) {
+            // Verificar si el cargo existe
+            try (PreparedStatement verificarDeclaracion = conexion.prepareStatement(verificarSql)) {
+                verificarDeclaracion.setString(1, cargo.getCodigo());
+                try (ResultSet resultado = verificarDeclaracion.executeQuery()) {
+                    if (resultado.next()) {
+                        // Registro encontrado, proceder con la eliminación
+                        try (PreparedStatement eliminarDeclaracion = conexion.prepareStatement(eliminarSql)) {
+                            eliminarDeclaracion.setString(1, cargo.getCodigo());
+                            int filasAfectadas = eliminarDeclaracion.executeUpdate();
+                            if (filasAfectadas > 0) {
+                                System.out.println("El cargo con código " + cargo.getCodigo() + " ha sido eliminado.");
+                            } else {
+                                System.out.println("No se pudo eliminar el cargo con código " + cargo.getCodigo() + ".");
+                            }
+                        }
+                    } else {
+                        System.out.println("No se encontró un cargo con el código " + cargo.getCodigo() + ".");
+                    }
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void eliminarCargoDataBase(Cargo cargo) {
-        String sql = "DELETE FROM TCargo WHERE CCodigo = ?";
-        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
-             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
-            declaracion.setString(1, cargo.getCodigo());
-            declaracion.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
     public void agregarContrato(Contrato contrato) {
         contratos.add(contrato);
