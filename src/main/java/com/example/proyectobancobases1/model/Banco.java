@@ -182,6 +182,18 @@ public class Banco {
         return buscado;
     }
 
+    public Departamento buscarDepartamentoConSedeNombre(String nombre){
+        boolean encontrado = false;
+        Departamento buscado = null;
+        for (int i = 0; i < departamentosConSede.size() && !encontrado; i++) {
+            if (departamentosConSede.get(i).getNombre().contentEquals(nombre)) {
+                encontrado = true;
+                buscado = departamentosConSede.get(i);
+            }
+        }
+        return buscado;
+    }
+
     public void actualizarTipoMunicipio(TipoMunicipio tipoMunicipio, TipoMunicipio nuevo) {
         tipoMunicipio = nuevo;
     }
