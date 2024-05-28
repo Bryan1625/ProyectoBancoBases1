@@ -5,8 +5,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import org.apache.poi.ss.formula.eval.NumberEval;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class HelloController {
 
@@ -14,6 +17,7 @@ public class HelloController {
     private void initialize() {
         TipoMuNombreMunicipio.getItems().addAll("Grande", "Mediano", "Pequeño");
         TipoMuNombreMunicipio.setValue("Pequeño");
+        EmpleGeneroEmpleado.getItems().addAll("Hombre","Mujer");
 
     }
 
@@ -111,11 +115,11 @@ public class HelloController {
     @FXML
     private TextField UtilLogin;
     @FXML
-    private TextField UtilCodigoEmpleado;
+    private ChoiceBox UtilCodigoEmpleado;
     @FXML
     private TextField UtilClave;
     @FXML
-    private TextField UtilFechaCreacionUsuario;
+    private DatePicker UtilFechaCreacionUsuario;
     @FXML
     private Button UtilBtnGuardar;
     @FXML
@@ -213,7 +217,7 @@ public class HelloController {
     @FXML
     private AnchorPane AnchorProfesiones;
     @FXML
-    private TextField ProfCodigoCargo;
+    private ChoiceBox ProfCodigoCargo;
     @FXML
     private TextField ProfNombreProfesion;
 
@@ -222,7 +226,7 @@ public class HelloController {
     @FXML
     private AnchorPane AnchorEmpleados;
     @FXML
-    private TextField EmpleCodigoCargo;
+    private ChoiceBox EmpleCodigoCargo;
     @FXML
     private TextField EmpleCedulaEmpleado;
     @FXML
@@ -253,8 +257,17 @@ public class HelloController {
 
     @FXML
     private void HandleIniciarSesion() {
-        PanePrincipal.setVisible(true);
-        PaneInicioSesion.setVisible(false);
+
+        Empleado empleado = new Empleado("","","","","","",null,null);
+        Usuario usuario = new Usuario("Admin", "Admin",empleado);
+        BancoABC.getUsuarios().set(1,usuario);
+
+        boolean Bandera = BancoABC.iniciarSesion(NombreSesion.getText(),ContrasenaSesion.getText());
+
+        if(Bandera){
+            PanePrincipal.setVisible(true);
+            PaneInicioSesion.setVisible(false);
+        }
     }
 
     private void MovPrincipal (Pane pane){
@@ -457,15 +470,31 @@ public class HelloController {
     @FXML //EDITA DEPARTAMENTO NUEVO
     private void DepBtnEditar(){
 
+        GetDataDep();
+
+        Departamento departamento = BancoABC.buscarDepartamentoPorNombre(nombreDepartamento);
+
+        BancoABC.actualizarDepartamentoConSede(departamento);
+
     }
 
     @FXML //ELIMINA UN DEPARTAMENTO
     private void DepBtnEliminar(){
 
+        GetDataDep();
+
+        Departamento departamento = BancoABC.buscarDepartamentoPorNombre(nombreDepartamento);
+
+        BancoABC.eliminarDepartamentoConSede(departamento);
+
     }
 
     @FXML //BUSCA UN DEPARTAMENTO
     private void DepBtnBuscar(){
+
+        GetDataDep();
+
+        BancoABC.buscarEmpleado(codigoDepartamento);
 
     }
 
@@ -522,13 +551,29 @@ public class HelloController {
     @FXML //ELIMINA UN TIPO MUNICIPIO
     private void TipoMuBtnEliminar(){
 
+        GetDataTipoMu();
+
+        TipoMunicipio tipoMunicipio = BancoABC.buscarTipoMunicipioPorNombre(nombreTipoMunicipio);
+
+        BancoABC.eliminarTipoMunicipio(tipoMunicipio);
+
     }
     @FXML //EDITAR UN TIPO MUNICIPIO
     private void TipoMuBtnEditar(){
 
+        GetDataTipoMu();
+
+        TipoMunicipio tipoMunicipio = BancoABC.buscarTipoMunicipioPorNombre(nombreTipoMunicipio);
+
+        BancoABC.actualizarTipoMunicipio(tipoMunicipio);
+
     }
     @FXML //BUSCAR UN TIPO MUNICIPIO
     private void TipoMuBtnBuscar(){
+
+        GetDataTipoMu();
+
+        BancoABC.buscarTipoMunicipio(codigoTipoMunicipio);
 
     }
 
@@ -581,19 +626,31 @@ public class HelloController {
             System.out.println("Nombre: "+BancoABC.getMunicipiosConSede().get(i).getNombre());
         }
 
-
-
     }
     @FXML
     private void MunBtnEditar(){
 
+        GetDataMun();
+
+        Municipio municipio = BancoABC.buscarMunicipioPorNombre(nombreMunicipio);
+
+        BancoABC.actualizarMunicipioConSede(municipio);
     }
     @FXML
     private void MunBtnEliminar(){
 
+        GetDataMun();
+
+        Municipio municipio = BancoABC.buscarMunicipioPorNombre(nombreMunicipio);
+
+        BancoABC.eliminarMunicipioConSede(municipio);
     }
     @FXML
     private void MunBtnBuscar(){
+
+        GetDataMun();
+
+        BancoABC.buscarMunicipioConSede(codigoMunicipio);
 
     }
 
@@ -640,6 +697,8 @@ public class HelloController {
 
         BancoABC.agregarSucursal(NuevaSucursal);
 
+        RecorrerSucursales();
+
         for (int i =0; i< BancoABC.getSucursales().size();i++){
             System.out.println("Sucursales: "+BancoABC.getSucursales().get(i));
 
@@ -650,13 +709,408 @@ public class HelloController {
     @FXML
     private void SucBtnEliminar(){
 
+        GetDataSuc();
+
+        Sucursal sucursal = BancoABC.buscarSucursalPorNombre(nombreSucursal);
+
+        BancoABC.eliminarSucursal(sucursal);
+
     }
     @FXML
     private void SucBtnEditar(){
 
+        GetDataSuc();
+
+        Sucursal sucursal = BancoABC.buscarSucursalPorNombre(nombreSucursal);
+
+        BancoABC.actualizarSucursal(sucursal);
+
     }
     @FXML
     private void SucBtnBuscar(){
+
+        GetDataSuc();
+
+        BancoABC.buscarSucursal(codigoSucursal);
+
+    }
+
+    private void RecorrerSucursales(){ //RECORRE LAS SUCURSALES PARA LAS CHOICEBOX
+
+        ArrayList<Sucursal> Sucursales = BancoABC.getSucursales();
+
+        TransSucursalContrato.getItems().clear();
+
+        for (int i = 0; i < Sucursales.size();i++){
+
+            TransSucursalContrato.getItems().add(Sucursales.get(i).getNombre());
+            TransSucursalContrato.setValue(Sucursales.get(i).getNombre());
+
+        }
+
+
+    }
+
+    //METODO FORMULARIOS CARGO
+
+    private String codigoCargo;
+    private String nombreCargo;
+    private double salarioCargo;
+
+
+    private void GetDataCargo(){
+
+        codigoCargo = CarCodigoCargo.getText();
+        nombreCargo = CarNombreCargo.getText();
+        salarioCargo = Integer.parseInt(CarSalarioCargo.getText());
+
+    }
+
+    @FXML
+    private void CarBtnGuardar(){
+
+
+        GetDataCargo();
+
+        Cargo NuevoCargo = new Cargo(codigoCargo, nombreCargo,salarioCargo,"01");
+
+        BancoABC.agregarCargo(NuevoCargo);
+
+        RecorrerCargos();
+
+        for (int i =0; i< BancoABC.getCargos().size();i++){
+            System.out.println("Cargo: "+BancoABC.getCargos().get(i));
+
+            System.out.println("Cargo: "+BancoABC.getCargos().get(i).getCodigo());
+            System.out.println("Nombre: "+BancoABC.getCargos().get(i).getNombre());
+        }
+
+    }
+    @FXML
+    private void CarBtnEliminar(){
+
+        GetDataCargo();
+
+        Cargo cargo = BancoABC.buscarCargoPorNombre(nombreCargo);
+
+        BancoABC.eliminarCargo(cargo);
+
+    }
+    @FXML
+    private void CarBtnEditar(){
+
+        GetDataCargo();
+
+        Cargo cargo = BancoABC.buscarCargoPorNombre(nombreCargo);
+
+        BancoABC.actualizarCargo(cargo);
+
+    }
+    @FXML
+    private void CarBtnBuscar(){
+
+        GetDataCargo();
+
+        BancoABC.buscarCargo(codigoCargo);
+
+    }
+
+    private void RecorrerCargos(){
+
+        ArrayList<Cargo> Cargos = BancoABC.getCargos();
+
+        ProfCodigoCargo.getItems().clear();
+        TransCargoContrato.getItems().clear();
+
+        for (int i = 0; i < Cargos.size();i++){
+
+            ProfCodigoCargo.getItems().add(Cargos.get(i).getCodigo());
+            ProfCodigoCargo.setValue(Cargos.get(i).getCodigo());
+            TransCargoContrato.getItems().add(Cargos.get(i).getCodigo());
+            TransCargoContrato.setValue(Cargos.get(i).getCodigo());
+
+        }
+    }
+
+    //METODOS FORMULARIO PROFESIONES
+
+    private String codigoProfesionCargo;
+    private String nombreProfesion;
+
+    private void GetDataProfesion(){
+        codigoProfesionCargo = ProfCodigoCargo.getValue().toString();
+        nombreProfesion = ProfNombreProfesion.getText();
+    }
+
+    @FXML
+    private void ProfBtnGuardar(){
+
+        GetDataProfesion();
+
+        Profesion NuevoProfesion = new Profesion(codigoProfesionCargo,nombreProfesion);
+
+        BancoABC.agregarProfesion(NuevoProfesion);
+
+        RecorrerProfesiones();
+
+    }
+    @FXML
+    private void ProfBtnEliminar(){
+
+        GetDataProfesion();
+
+        Profesion profesion = BancoABC.buscarProfesionPorNombre(nombreProfesion);
+
+        BancoABC.eliminarProfesion(profesion);
+
+    }
+    @FXML
+    private void ProfBtnEditar(){
+
+        GetDataProfesion();
+
+        Profesion profesion = BancoABC.buscarProfesionPorNombre(nombreProfesion);
+
+        BancoABC.actualizarProfesion(profesion);
+
+    }
+    @FXML
+    private void ProfBtnBuscar(){
+
+        GetDataProfesion();
+
+        BancoABC.buscarProfesion(codigoProfesionCargo);
+
+    }
+
+    private void RecorrerProfesiones(){
+
+        ArrayList<Profesion> Profesiones = BancoABC.getProfesiones();
+
+        EmpleProfesionEmpleado.getItems().clear();
+
+        for (int i = 0; i < Profesiones.size();i++){
+
+            EmpleProfesionEmpleado.getItems().add(Profesiones.get(i).getNombre());
+            EmpleProfesionEmpleado.setValue(Profesiones.get(i).getNombre());
+
+        }
+    }
+
+    //METODO FORMULARIO EMPLEADOS
+    private String cedulaEmpleado;
+    private String nombreEmpleado;
+    private String telefonoEmpleado;
+    private String direccionEmpleado;
+    private String profesionEmpleado;
+    private String generoEmpleado;
+    private LocalDate fechaNacimiento;
+    private String edadEmpleado;
+
+    private void GetDataEmpleado(){
+        cedulaEmpleado = EmpleCedulaEmpleado.getText();
+        nombreEmpleado = EmpleNombreEmpleado.getText();
+        telefonoEmpleado = EmpleTelefonoEmpleado.getText();
+        direccionEmpleado = EmpleDireccionEmpleado.getText();
+        profesionEmpleado = EmpleProfesionEmpleado.getValue().toString();
+        generoEmpleado = EmpleGeneroEmpleado.getValue().toString();
+        fechaNacimiento = EmpleFechaNacimiento.getValue();
+        edadEmpleado = EmpleEdadEmpleado.getText();
+
+    }
+
+    @FXML
+    private void EmpleBtnGuardar(){
+
+        GetDataEmpleado();
+
+        Profesion ProfesionEmpleado = BancoABC.buscarProfesionPorNombre(profesionEmpleado);
+
+        Empleado NuevoEmpleado = new Empleado(cedulaEmpleado,cedulaEmpleado,nombreEmpleado,direccionEmpleado,telefonoEmpleado,generoEmpleado,fechaNacimiento,ProfesionEmpleado);
+
+        BancoABC.agregarEmpleado(NuevoEmpleado);
+
+        RecorrerEmpleados();
+
+        for (int i =0; i< BancoABC.getEmpleados().size();i++){
+            System.out.println("Empleado: "+BancoABC.getEmpleados().get(i));
+
+            System.out.println("Empleado: "+BancoABC.getEmpleados().get(i).getCedula());
+            System.out.println("Nombre: "+BancoABC.getEmpleados().get(i).getNombre());
+        }
+
+    }
+    @FXML
+    private void EmpleBtnEliminar(){
+
+        GetDataEmpleado();
+
+        Empleado empleado = BancoABC.buscarEmpleado(cedulaEmpleado);
+
+        BancoABC.eliminarEmpleado(empleado);
+
+    }
+    @FXML
+    private void EmpleBtnEditar(){
+
+        GetDataEmpleado();
+
+        Empleado empleado = BancoABC.buscarEmpleado(cedulaEmpleado);
+
+        BancoABC.actualizarEmpleado(empleado);
+    }
+    @FXML
+    private void EmpleBtnBuscar(){
+
+        GetDataEmpleado();
+
+        BancoABC.buscarEmpleado(cedulaEmpleado);
+
+    }
+
+    private void RecorrerEmpleados(){
+
+        ArrayList<Empleado> Empleados = BancoABC.getEmpleados();
+
+        UtilCodigoEmpleado.getItems().clear();
+        TransEmpleado.getItems().clear();
+
+        for (int i = 0; i < Empleados.size();i++){
+
+            UtilCodigoEmpleado.getItems().add(Empleados.get(i).getCedula());
+            UtilCodigoEmpleado.setValue(Empleados.get(i).getCedula());
+            TransEmpleado.getItems().add(Empleados.get(i).getCedula());
+            TransEmpleado.setValue(Empleados.get(i).getCedula());
+
+        }
+    }
+
+
+    //METODO FORMULARIOS TRANSACCIONES
+
+    private String numeroContrato;
+    private String fechaContrato;
+    private LocalDate fechaInicio;
+    private LocalDate fechaTerminacion;
+    private String cargoContrato;
+    private String sucursalContrato;
+    private String empleadoContrato;
+    private String descripcionContrato;
+
+    private void GetDataTransaccion(){
+
+        numeroContrato = TransNumeroContrato.getText();
+        fechaContrato = TransFechaContrato.getValue().toString();
+        fechaInicio = TransFechaInicio.getValue();
+        fechaTerminacion = TransFechaTerminacion.getValue();
+        cargoContrato = TransCargoContrato.getValue().toString();
+        sucursalContrato = TransSucursalContrato.getValue().toString();
+        empleadoContrato = TransEmpleado.getValue().toString();
+        descripcionContrato = TransDescripcionContrato.getText();
+    }
+
+    @FXML
+    private void TransBtnGuardar(){
+
+        GetDataTransaccion();
+
+        Sucursal sucursal = BancoABC.buscarSucursalPorNombre(sucursalContrato);
+        Cargo cargo = BancoABC.buscarCargoPorNombre(cargoContrato);
+        Empleado empleado = BancoABC.buscarEmpleado(empleadoContrato);
+
+        Contrato NuevoContrato = new Contrato(numeroContrato,descripcionContrato,fechaInicio,fechaTerminacion,sucursal,cargo,empleado);
+
+        BancoABC.agregarContrato(NuevoContrato);
+
+        for (int i =0; i< BancoABC.getContratos().size();i++){
+            System.out.println("Contratos: "+BancoABC.getContratos().get(i));
+
+            System.out.println("Contratos: "+BancoABC.getContratos().get(i).getNumero());
+        }
+
+
+    }
+    @FXML
+    private void TransBtnEliminar(){
+
+        GetDataTransaccion();
+
+        Contrato contrato = BancoABC.buscarContrato(numeroContrato);
+
+        BancoABC.eliminarContrato(contrato);
+
+    }
+    @FXML
+    private void TransBtnEditar(){
+
+        GetDataTransaccion();
+
+        Contrato contrato = BancoABC.buscarContrato(numeroContrato);
+
+        BancoABC.actualizarContrato(contrato);
+
+    }
+    @FXML
+    private void TransBtnBuscar(){
+
+        GetDataTransaccion();
+
+        BancoABC.buscarContrato(numeroContrato);
+
+    }
+
+    //METODOS FORMULARIOS USUARIOS
+
+    private String loginUsuario;
+    private String codigoEmpleado;
+    private String claveUsuario;
+    private String fechaCreacion;
+
+    private void GetDataUsuarios(){
+        loginUsuario = UtilLogin.getText();
+        codigoEmpleado = UtilCodigoEmpleado.getValue().toString();
+        claveUsuario = UtilClave.getText();
+        fechaCreacion = UtilFechaCreacionUsuario.getValue().toString();
+    }
+
+    @FXML
+    private void UtilBtnGuardar(){
+
+        GetDataUsuarios();
+
+        Empleado empleado = BancoABC.buscarEmpleado(codigoEmpleado);
+
+        Usuario NuevoUsuario = new Usuario(loginUsuario,claveUsuario,empleado);
+
+        BancoABC.agregarUsuario(NuevoUsuario);
+
+    }
+    @FXML
+    private void UtilBtnEliminar(){
+
+        GetDataUsuarios();
+
+        Usuario usuario = BancoABC.buscarUsuario(loginUsuario);
+
+        BancoABC.eliminarUsuario(usuario);
+
+    }
+    @FXML
+    private void UtilBtnEditar(){
+
+        GetDataUsuarios();
+
+        Usuario usuario = BancoABC.buscarUsuario(loginUsuario);
+
+        BancoABC.actualizarUsuario(usuario);
+
+    }
+    @FXML
+    private void UtilBtnBuscar(){
+
+        GetDataUsuarios();
+
+        BancoABC.buscarUsuario(loginUsuario);
 
     }
 
