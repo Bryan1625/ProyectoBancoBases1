@@ -1,6 +1,7 @@
 package com.example.proyectobancobases1.model;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 import com.example.proyectobancobases1.util.BaseDeDatosUtil;
@@ -28,6 +29,53 @@ public class Banco {
         this.profesiones = new ArrayList<>();
     }
 
+    public static void main(String[] args) {
+        Banco banco = new Banco();
+
+
+        // Prueba con Departamento
+        Departamento nuevoDepartamento = new Departamento("009", "NuevoDepartamento", 123);
+        banco.agregarDepartamentoConSede(nuevoDepartamento);
+        banco.eliminarDepartamentoConSede(nuevoDepartamento);
+
+        // Prueba con Departamento
+        Cargo nuevoCargo = new Cargo("009", "NuevoCargo", 123, "1");
+        banco.agregarCargo(nuevoCargo);
+        banco.eliminarCargo(nuevoCargo);
+
+        // Prueba con TipoMunicipio
+        TipoMunicipio nuevoTipoMunicipio = new TipoMunicipio("009", "Rural");
+        banco.agregarTipoMunicipio(nuevoTipoMunicipio);
+        banco.eliminarTipoMunicipio(nuevoTipoMunicipio);
+
+        // Prueba con Municipio
+        Municipio nuevoMunicipio = new Municipio("009", "NuevoMunicipio", 123, nuevoTipoMunicipio, nuevoDepartamento.getNombre());
+        banco.agregarMunicipioConSede(nuevoMunicipio);
+        banco.eliminarMunicipioConSede(nuevoMunicipio);
+
+        // Prueba con Profesion
+        Profesion nuevaProfesion = new Profesion("009", "Ingeniero");
+        banco.agregarProfesion(nuevaProfesion);
+        banco.eliminarProfesion(nuevaProfesion);
+
+        // Prueba con Sucursal
+        Sucursal nuevaSucursal = new Sucursal("009", "NuevaSucursal", nuevoMunicipio, nuevoDepartamento, 12345);
+        banco.agregarSucursal(nuevaSucursal);
+        banco.eliminarSucursal(nuevaSucursal);
+
+        // Prueba con Empleado
+        Empleado nuevoEmpleado = new Empleado("009", "123456789", "Juan Pérez", "Cra E", "1234567890", "M", LocalDate.of(1990, 1, 1), nuevaProfesion);
+        banco.agregarEmpleado(nuevoEmpleado);
+        banco.eliminarEmpleado(nuevoEmpleado);
+
+        // Prueba con Contrato
+        Contrato nuevoContrato = new Contrato("007", "Contrato de prueba", LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 31), nuevaSucursal, nuevoCargo, nuevoEmpleado);
+        banco.agregarContrato(nuevoContrato);
+        banco.eliminarContrato(nuevoContrato);
+
+    }
+
+
     ///////////////////CONSULTAS PEDIDAS QUE DEBE HACER LA APP///////////////////////
     /*
     EN ESTA SECCION SE HARAN LAS CONSULTAS (5?), PEDIDAS POR EL PROFESOR
@@ -42,7 +90,7 @@ public class Banco {
 
             declaracion.setString(1, cargo.getCodigo());
             declaracion.setString(2, cargo.getNombre());
-            declaracion.setDouble(3, cargo.getSalario());
+            declaracion.setString(3, ""+cargo.getSalario());
             int filasAfectadas = declaracion.executeUpdate();
 
             if (filasAfectadas > 0) {
@@ -518,18 +566,31 @@ public class Banco {
         }
     }
 
+    public boolean login(String usuario, String contrasenia){
+        Usuario login = buscarUsuario(usuario);
+        if (login == null) {
+            return false;
+        }else{
+            if(login.getContrasenia().equals(contrasenia)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     // Implementa el mismo patrón para las demás entidades: Empleado, Sucursal, TipoMunicipio, Usuario, Profesion
     // A continuación, se proporciona un ejemplo para Empleado:
 
     // Métodos CRUD para Empleado
     public void agregarEmpleadoDataBase(Empleado empleado) {
-        String sql = "INSERT INTO TEmpleado (ECodigo, ENombre, ESalario) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO TEmpleado (ECodigo, ECedula, ENombre, ETelefono, EDireccion, EProfesion, EGenero, EFechaNto) VALUES (?, ?, ?)";
         try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
              PreparedStatement declaracion = conexion.prepareStatement(sql)) {
 
             declaracion.setString(1, empleado.getCodigo());
             declaracion.setString(2, empleado.getNombre());
             declaracion.setDouble(3, empleado.getContrato().getCargo().getSalario());
+            declaracion.setDouble(4, empleado.getContrato().getCargo().getSalario());
             int filasAfectadas = declaracion.executeUpdate();
 
             if (filasAfectadas > 0) {

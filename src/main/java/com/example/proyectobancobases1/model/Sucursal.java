@@ -1,7 +1,7 @@
 package com.example.proyectobancobases1.model;
 
 public class Sucursal {
-    private String codigo,nombre, direccion, telefono;
+    private String codigo,nombre;
     private Municipio municipio;
     private Departamento departamento;
     private double presupuestoAnual;

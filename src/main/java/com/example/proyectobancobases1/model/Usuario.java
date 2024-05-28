@@ -14,6 +14,10 @@ public class Usuario {
         this.fechaCreacion = LocalDate.now();
     }
 
+    public String getNivelUsuario(){
+        return empleado.getContrato().getCargo().getNivelUsuario();
+    }
+
     public Usuario() {
     }
 

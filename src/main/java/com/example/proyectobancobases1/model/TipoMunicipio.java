@@ -4,7 +4,7 @@ public class TipoMunicipio {
     private String nombre;
     private String codigo;
 
-    public TipoMunicipio(String nombre, String codigo) {
+    public TipoMunicipio(String codigo, String nombre) {
         this.nombre = nombre;
         this.codigo = codigo;
     }

@@ -8,7 +8,7 @@ public class Empleado {
     private Profesion profesion;
     private Contrato contrato;
 
-    public Empleado(String codigo, String cedula, String nombre, String direccion, String telefono, String genero, LocalDate fechaNacimiento, Profesion profesion, Contrato contrato) {
+    public Empleado(String codigo, String cedula, String nombre, String direccion, String telefono, String genero, LocalDate fechaNacimiento, Profesion profesion) {
         this.codigo = codigo;
         this.cedula = cedula;
         this.nombre = nombre;
@@ -17,7 +17,7 @@ public class Empleado {
         this.genero = genero;
         this.fechaNacimiento = fechaNacimiento;
         this.profesion = profesion;
-        this.contrato = contrato;
+        this.contrato = null;
     }
 
     public String getGenero() {
