@@ -3,6 +3,7 @@ package com.example.proyectobancobases1.model;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import com.example.proyectobancobases1.util.BaseDeDatosUtil;
 
@@ -80,6 +81,181 @@ public class Banco {
     /*
     EN ESTA SECCION SE HARAN LAS CONSULTAS (5?), PEDIDAS POR EL PROFESOR
      */
+    public List<Empleado> obtenerEmpleadosPorSucursal(String nombreSucursal) {
+        List<Empleado> empleados = new ArrayList<>();
+        String sql = "SELECT E.* " +
+                "FROM TEmpleado E " +
+                "JOIN TSucursal S ON E.ECodigo = S.SCodigo " +
+                "WHERE S.SNombre = ?";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+            declaracion.setString(1, nombreSucursal);
+            ResultSet resultado = declaracion.executeQuery();
+            while (resultado.next()) {
+                // Aquí debes crear un objeto Empleado y agregarlo a la lista
+                Empleado empleado = new Empleado(/* pasar los valores del resultado */);
+                empleados.add(empleado);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return empleados;
+    }
+
+    public List<Empleado> obtenerEmpleadosPorProfesion(String nombreProfesion) {
+        List<Empleado> empleados = new ArrayList<>();
+        String sql = "SELECT E.* " +
+                "FROM TEmpleado E " +
+                "JOIN TProfesion P ON E.EProfesion = P.PCodigo " +
+                "WHERE P.PNombre = ?";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+            declaracion.setString(1, nombreProfesion);
+            ResultSet resultado = declaracion.executeQuery();
+            while (resultado.next()) {
+                // Aquí debes crear un objeto Empleado y agregarlo a la lista
+                Empleado empleado = new Empleado(/* pasar los valores del resultado */);
+                empleados.add(empleado);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return empleados;
+    }
+
+    public List<Empleado> obtenerEmpleadosPorSucursalYProfesion(String nombreSucursal, String nombreProfesion) {
+        List<Empleado> empleados = new ArrayList<>();
+        String sql = "SELECT E.* " +
+                "FROM TEmpleado E " +
+                "JOIN TSucursal S ON E.ECodigo = S.SCodigo " +
+                "JOIN TProfesion P ON E.EProfesion = P.PCodigo " +
+                "WHERE S.SNombre = ? AND P.PNombre = ?";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+            declaracion.setString(1, nombreSucursal);
+            declaracion.setString(2, nombreProfesion);
+            ResultSet resultado = declaracion.executeQuery();
+            while (resultado.next()) {
+                // Crear objeto Empleado y agregarlo a la lista
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return empleados;
+    }
+
+    public List<Empleado> obtenerEmpleadosPorSucursalYGenero(String nombreSucursal, String genero) {
+        List<Empleado> empleados = new ArrayList<>();
+        String sql = "SELECT E.* " +
+                "FROM TEmpleado E " +
+                "JOIN TSucursal S ON E.ECodigo = S.SCodigo " +
+                "WHERE S.SNombre = ? AND E.EGenero = ?";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+            declaracion.setString(1, nombreSucursal);
+            declaracion.setString(2, genero);
+            ResultSet resultado = declaracion.executeQuery();
+            while (resultado.next()) {
+                // Crear objeto Empleado y agregarlo a la lista
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return empleados;
+    }
+
+    public List<Sucursal> obtenerSucursalesConEmpleadoGenero(String genero) {
+        List<Sucursal> sucursales = new ArrayList<>();
+        String sql = "SELECT DISTINCT S.* " +
+                "FROM TSucursal S " +
+                "JOIN TEmpleado E ON S.SCodigo = E.ECodigo " +
+                "WHERE E.EGenero = ?";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+            declaracion.setString(1, genero);
+            ResultSet resultado = declaracion.executeQuery();
+            while (resultado.next()) {
+                // Crear objeto Sucursal y agregarlo a la lista
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return sucursales;
+    }
+
+    public List<Sucursal> obtenerSucursalesSinEmpleados() {
+        List<Sucursal> sucursales = new ArrayList<>();
+        String sql = "SELECT S.* " +
+                "FROM TSucursal S " +
+                "LEFT JOIN TEmpleado E ON S.SCodigo = E.ECodigo " +
+                "WHERE E.ECodigo IS NULL";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             Statement declaracion = conexion.createStatement();
+             ResultSet resultado = declaracion.executeQuery(sql)) {
+            while (resultado.next()) {
+                // Crear objeto Sucursal y agregarlo a la lista
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return sucursales;
+    }
+
+    public List<Empleado> obtenerEmpleadosPorEdadMayorA(int edad) {
+        List<Empleado> empleados = new ArrayList<>();
+        String sql = "SELECT E.* " +
+                "FROM TEmpleado E " +
+                "WHERE YEAR(CURRENT_DATE) - YEAR(E.EFechaNto) > ?";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+            declaracion.setInt(1, edad);
+            ResultSet resultado = declaracion.executeQuery();
+            while (resultado.next()) {
+                String codigo = resultado.getString("ECodigo");
+                String cedula = resultado.getString("ECedula");
+                String nombre = resultado.getString("ENombre");
+                String direccion = resultado.getString("EDireccion");
+                String telefono = resultado.getString("ETelefono");
+                String genero = resultado.getString("EGenero");
+                LocalDate fechaNacimiento = resultado.getDate("EFechaNto").toLocalDate();
+                Profesion profesion = new Profesion(resultado.getString("EProfesion"), buscarProfesion(resultado.getString("EProfesion")).getNombre()); // Aquí debes llenar el segundo parámetro con el nombre de la profesión, si lo tienes disponible en la tabla
+                Empleado empleado = new Empleado(codigo, cedula, nombre, direccion, telefono, genero, fechaNacimiento, profesion);
+                empleados.add(empleado);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return empleados;
+    }
+
+    public List<Empleado> obtenerEmpleadosPorEdadMenorA(int edad) {
+        List<Empleado> empleados = new ArrayList<>();
+        String sql = "SELECT E.* " +
+                "FROM TEmpleado E " +
+                "WHERE YEAR(CURRENT_DATE) - YEAR(E.EFechaNto) < ?";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+            declaracion.setInt(1, edad);
+            ResultSet resultado = declaracion.executeQuery();
+            while (resultado.next()) {
+                String codigo = resultado.getString("ECodigo");
+                String cedula = resultado.getString("ECedula");
+                String nombre = resultado.getString("ENombre");
+                String direccion = resultado.getString("EDireccion");
+                String telefono = resultado.getString("ETelefono");
+                String genero = resultado.getString("EGenero");
+                LocalDate fechaNacimiento = resultado.getDate("EFechaNto").toLocalDate();
+                Profesion profesion = new Profesion(resultado.getString("EProfesion"), buscarProfesion(resultado.getString("EProfesion")).getNombre()); // Aquí debes llenar el segundo parámetro con el nombre de la profesión, si lo tienes disponible en la tabla
+                Empleado empleado = new Empleado(codigo, cedula, nombre, direccion, telefono, genero, fechaNacimiento, profesion);
+                empleados.add(empleado);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return empleados;
+    }
+
+
 
     /////////////////////////////////////////////////////////////////////////////////
 
