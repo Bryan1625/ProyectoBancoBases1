@@ -568,7 +568,7 @@ public class HelloController {
 
         GetDataMun();
 
-        Municipio NuevoMunicipio = new Municipio(codigoMunicipio,nombreMunicipio,poblacionMunicipio,tipoMunicipio,departamentoUbica);
+        Municipio NuevoMunicipio = new Municipio(codigoMunicipio,nombreMunicipio,poblacionMunicipio,BancoABC.buscarTipoMunicipio(tipoMunicipio),departamentoUbica);
 
         BancoABC.agregarMunicipioConSede(NuevoMunicipio);
 
@@ -636,7 +636,7 @@ public class HelloController {
 
         GetDataSuc();
 
-        Sucursal NuevaSucursal = new Sucursal(codigoSucursal,nombreSucursal,municipioSucursal,departamentoSucursal,presupuestoAsignado);
+        Sucursal NuevaSucursal = new Sucursal(codigoSucursal,nombreSucursal,BancoABC.buscarMunicipioPorNombre(municipioSucursal),BancoABC.buscarDepartamentoPorNombre(departamentoSucursal),presupuestoAsignado);
 
         BancoABC.agregarSucursal(NuevaSucursal);
 

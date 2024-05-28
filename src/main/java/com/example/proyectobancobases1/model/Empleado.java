@@ -1,18 +1,39 @@
 package com.example.proyectobancobases1.model;
 
+import java.time.LocalDate;
+
 public class Empleado {
-    private String codigo,cedula,nombre,direccion,telefono;
+    private String codigo,cedula,nombre,direccion,telefono, genero;
+    private LocalDate fechaNacimiento;
     private Profesion profesion;
     private Contrato contrato;
 
-    public Empleado(String codigo, String cedula, String nombre, String direccion, String telefono, Profesion profesion, Contrato contrato) {
+    public Empleado(String codigo, String cedula, String nombre, String direccion, String telefono, String genero, LocalDate fechaNacimiento, Profesion profesion, Contrato contrato) {
         this.codigo = codigo;
         this.cedula = cedula;
         this.nombre = nombre;
         this.direccion = direccion;
         this.telefono = telefono;
+        this.genero = genero;
+        this.fechaNacimiento = fechaNacimiento;
         this.profesion = profesion;
         this.contrato = contrato;
+    }
+
+    public String getGenero() {
+        return genero;
+    }
+
+    public void setGenero(String genero) {
+        this.genero = genero;
+    }
+
+    public LocalDate getFechaNacimiento() {
+        return fechaNacimiento;
+    }
+
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
     }
 
     public Empleado() {

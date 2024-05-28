@@ -2,6 +2,7 @@ package com.example.proyectobancobases1.model;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Optional;
 import com.example.proyectobancobases1.util.BaseDeDatosUtil;
 
 public class Banco {
@@ -15,59 +16,6 @@ public class Banco {
     private ArrayList<Usuario> usuarios;
     private ArrayList<Profesion> profesiones;
 
-    public static void main(String[] args) {
-        Banco banco = new Banco();
-
-        // Intentar agregar un nuevo cargo
-        Cargo nuevoCargo = new Cargo("5", "NuevoCargo", 5000.0, "Descripción");
-        banco.agregarCargoDataBase(nuevoCargo);
-    }
-
-    ///////////////////CONSULTAS PEDIDAS QUE DEBE HACER LA APP///////////////////////
-
-    /*
-    EN ESTA SECCION SE HARAN LAS CONSULTAS (5?), PEDIDAS POR EL PROFESOR
-     */
-
-
-    /////////////////////////////////////////////////////////////////////////////////
-
-    public void verificarCargo(String codigo) {
-        String sql = "SELECT * FROM TCargo WHERE CCodigo = ?";
-        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
-             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
-
-            declaracion.setString(1, codigo);
-            ResultSet resultados = declaracion.executeQuery();
-
-            if (resultados.next()) {
-                System.out.println("Cargo encontrado:");
-                System.out.println("Código: " + resultados.getString("CCodigo"));
-                System.out.println("Nombre: " + resultados.getString("CNombre"));
-                System.out.println("Salario: " + resultados.getDouble("CSalario"));
-            } else {
-                System.out.println("No se encontró ningún cargo con el código: " + codigo);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    public void verificarTablaCargos() {
-        String sql = "SELECT * FROM TCargo";
-        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
-             Statement declaracion = conexion.createStatement();
-             ResultSet resultados = declaracion.executeQuery(sql)) {
-
-            while (resultados.next()) {
-                System.out.println("Código: " + resultados.getString("CCodigo"));
-                System.out.println("Nombre: " + resultados.getString("CNombre"));
-                System.out.println("Salario: " + resultados.getDouble("CSalario"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     public Banco() {
         this.cargos = new ArrayList<>();
         this.contratos = new ArrayList<>();
@@ -80,378 +28,324 @@ public class Banco {
         this.profesiones = new ArrayList<>();
     }
 
-    public ArrayList<Profesion> getProfesiones() {
-        return profesiones;
-    }
+    ///////////////////CONSULTAS PEDIDAS QUE DEBE HACER LA APP///////////////////////
+    /*
+    EN ESTA SECCION SE HARAN LAS CONSULTAS (5?), PEDIDAS POR EL PROFESOR
+     */
+    /////////////////////////////////////////////////////////////////////////////////
 
-    public void setProfesiones(ArrayList<Profesion> profesiones) {
-        this.profesiones = profesiones;
-    }
-
-    public void agregarCargo(Cargo cargo) {
-        agregarCargoDataBase(cargo);
-        cargos.add(cargo);
-    }
-
+    // Métodos CRUD para Cargo
     public void agregarCargoDataBase(Cargo cargo) {
         String sql = "INSERT INTO TCargo (CCodigo, CNombre, CSalario) VALUES (?, ?, ?)";
-        Connection conexion = null;
-        PreparedStatement declaracion = null;
-        try {
-            conexion = BaseDeDatosUtil.obtenerConexion();
-            System.out.println("Conexión establecida con éxito.");
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
 
-
-
-            // Preparar la declaración
-            declaracion = conexion.prepareStatement(sql);
-            System.out.println("Declaración preparada con éxito.");
-
-            // Asignar valores a la declaración preparada
             declaracion.setString(1, cargo.getCodigo());
             declaracion.setString(2, cargo.getNombre());
             declaracion.setDouble(3, cargo.getSalario());
-            System.out.println("Valores asignados a la declaración.");
-
-            // Ejecutar la declaración
             int filasAfectadas = declaracion.executeUpdate();
-            System.out.println("Declaración ejecutada. Filas afectadas: " + filasAfectadas);
-
-
-            System.out.println("Transacción confirmada.");
 
             if (filasAfectadas > 0) {
                 System.out.println("El cargo con código " + cargo.getCodigo() + " ha sido agregado.");
+                cargos.add(cargo);
             } else {
                 System.out.println("No se pudo agregar el cargo con código " + cargo.getCodigo() + ".");
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            try {
-                if (conexion != null) {
-                    System.out.println("Intentando revertir la transacción.");
-                    conexion.rollback();
-                    System.out.println("Transacción revertida.");
-                }
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        } finally {
-            // Cerrar los recursos
-            if (declaracion != null) {
-                try {
-                    declaracion.close();
-                    System.out.println("Declaración cerrada.");
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (conexion != null) {
-                try {
-                    conexion.close();
-                    System.out.println("Conexión cerrada.");
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 
-
     public void eliminarCargoDataBase(Cargo cargo) {
-        String verificarSql = "SELECT 1 FROM TCargo WHERE CCodigo = ?";
-        String eliminarSql = "DELETE FROM TCargo WHERE CCodigo = ?";
+        String sql = "DELETE FROM TCargo WHERE CCodigo = ?";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
 
-        try (Connection conexion = BaseDeDatosUtil.obtenerConexion()) {
-            // Verificar si el cargo existe
-            try (PreparedStatement verificarDeclaracion = conexion.prepareStatement(verificarSql)) {
-                verificarDeclaracion.setString(1, cargo.getCodigo());
-                try (ResultSet resultado = verificarDeclaracion.executeQuery()) {
-                    if (resultado.next()) {
-                        // Registro encontrado, proceder con la eliminación
-                        try (PreparedStatement eliminarDeclaracion = conexion.prepareStatement(eliminarSql)) {
-                            eliminarDeclaracion.setString(1, cargo.getCodigo());
-                            int filasAfectadas = eliminarDeclaracion.executeUpdate();
-                            if (filasAfectadas > 0) {
-                                System.out.println("El cargo con código " + cargo.getCodigo() + " ha sido eliminado.");
-                            } else {
-                                System.out.println("No se pudo eliminar el cargo con código " + cargo.getCodigo() + ".");
-                            }
-                        }
-                    } else {
-                        System.out.println("No se encontró un cargo con el código " + cargo.getCodigo() + ".");
-                    }
-                }
+            declaracion.setString(1, cargo.getCodigo());
+            int filasAfectadas = declaracion.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("El cargo con código " + cargo.getCodigo() + " ha sido eliminado.");
+                cargos.remove(cargo);
+            } else {
+                System.out.println("No se pudo eliminar el cargo con código " + cargo.getCodigo() + ".");
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+    public void actualizarCargoDataBase(Cargo cargo) {
+        String sql = "UPDATE TCargo SET CNombre = ?, CSalario = ? WHERE CCodigo = ?";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
 
-    public void agregarContrato(Contrato contrato) {
-        contratos.add(contrato);
+            declaracion.setString(1, cargo.getNombre());
+            declaracion.setDouble(2, cargo.getSalario());
+            declaracion.setString(3, cargo.getCodigo());
+            int filasAfectadas = declaracion.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("El cargo con código " + cargo.getCodigo() + " ha sido actualizado.");
+            } else {
+                System.out.println("No se pudo actualizar el cargo con código " + cargo.getCodigo() + ".");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void agregarDepartamentoConSede(Departamento departamento) {
-        departamentosConSede.add(departamento);
-    }
-
-    public void agregarMunicipioConSede(Municipio municipio) {
-        municipiosConSede.add(municipio);
-    }
-
-    public void agregarEmpleado(Empleado empleado) {
-        empleados.add(empleado);
-    }
-
-    public void agregarSucursal(Sucursal sucursal) {
-        sucursales.add(sucursal);
-    }
-
-    public void agregarTipoMunicipio(TipoMunicipio tipoMunicipio) {
-        tiposMunicipios.add(tipoMunicipio);
-    }
-
-    public void agregarUsuario(Usuario usuario) {
-        usuarios.add(usuario);
+    public void agregarCargo(Cargo cargo) {
+        agregarCargoDataBase(cargo);
     }
 
     public void eliminarCargo(Cargo cargo) {
         eliminarCargoDataBase(cargo);
-        cargos.remove(cargo);
-    }
-    public void eliminarCargoConCodigo(String codigo) {
-        Cargo cargo = buscarCargo(codigo);
-        if(cargo != null){
-            eliminarCargo(cargo);
-        }
     }
 
-    public void eliminarContrato(Contrato contrato) {
-        contratos.remove(contrato);
-    }
-    public void eliminarContratoConCodigo(String codigo) {
-        Contrato contrato = buscarContrato(codigo);
-        if(contrato != null){
-            eliminarContrato(contrato);
-        }
-    }
-
-    public void eliminarDepartamentoConSede(Departamento departamento) {
-        departamentosConSede.remove(departamento);
-    }
-    public void eliminarDepartamentoConSedeConCodigo(String codigo) {
-        Departamento departamento = buscarDepartamentoConSede(codigo);
-        if(departamento != null){
-            eliminarDepartamentoConSede(departamento);
-        }
-    }
-    public void eliminarMunicipioConSede(Municipio municipio) {
-        municipiosConSede.remove(municipio);
-    }
-    public void eliminarMunicipioConSedeConCodigo(String codigo) {
-        Municipio municipio = buscarMunicipio(codigo);
-        if(municipio != null){
-            eliminarMunicipioConSede(municipio);
-        }
-    }
-
-    public void eliminarEmpleado(Empleado empleado) {
-        empleados.remove(empleado);
-    }
-    public void eliminarEmpleadoConCodigo(String codigo) {
-        Empleado empleado = buscarEmpleado(codigo);
-        if(empleado != null){
-            eliminarEmpleado(empleado);
-        }
-    }
-
-    public void eliminarSucursal(Sucursal sucursal) {
-        sucursales.remove(sucursal);
-    }
-    public void eliminarSucursalConCodigo(String codigo) {
-        Sucursal sucursal = buscarSucursal(codigo);
-        if(sucursal != null){
-            eliminarSucursal(sucursal);
-        }
-    }
-
-    public void eliminarTipoMunicipio(TipoMunicipio tipoMunicipio) {
-        tiposMunicipios.remove(tipoMunicipio);
-    }
-    public void eliminarTipoMunicipioConCodigo(String codigo) {
-        TipoMunicipio tipoMunicipio = buscarTipoMunicipio(codigo);
-        if(tipoMunicipio != null){
-            eliminarTipoMunicipio(tipoMunicipio);
-        }
-    }
-
-    public void actualizarDepartamentoConSede(Departamento departamento, Departamento nuevo){
-        departamento = nuevo;
-    }
-
-    public Departamento buscarDepartamentoConSede(String codigo){
-        boolean encontrado = false;
-        Departamento buscado = null;
-        for (int i = 0; i < departamentosConSede.size() && !encontrado; i++) {
-            if (departamentosConSede.get(i).getCodigo().contentEquals(codigo)) {
-                encontrado = true;
-                buscado = departamentosConSede.get(i);
-            }
-        }
-        return buscado;
-    }
-
-    public Departamento buscarDepartamentoConSedeNombre(String nombre){
-        boolean encontrado = false;
-        Departamento buscado = null;
-        for (int i = 0; i < departamentosConSede.size() && !encontrado; i++) {
-            if (departamentosConSede.get(i).getNombre().contentEquals(nombre)) {
-                encontrado = true;
-                buscado = departamentosConSede.get(i);
-            }
-        }
-        return buscado;
-    }
-
-    public void actualizarTipoMunicipio(TipoMunicipio tipoMunicipio, TipoMunicipio nuevo) {
-        tipoMunicipio = nuevo;
-    }
-
-    public TipoMunicipio buscarTipoMunicipio(String codigo) {
-        boolean encontrado = false;
-        TipoMunicipio buscado = null;
-        for (int i = 0; i < tiposMunicipios.size() && !encontrado; i++) {
-            if (tiposMunicipios.get(i).getCodigo().contentEquals(codigo)) {
-                encontrado = true;
-                buscado = tiposMunicipios.get(i);
-            }
-        }
-        return buscado;
-    }
-
-    public void actualizarMunicipio(Municipio municipio, Municipio nuevo) {
-        municipio = nuevo;
-    }
-
-    public Municipio buscarMunicipio(String codigo) {
-        boolean encontrado = false;
-        Municipio buscado = null;
-        for (int i = 0; i < municipiosConSede.size() && !encontrado; i++) {
-            if (municipiosConSede.get(i).getCodigo().contentEquals(codigo)) {
-                encontrado = true;
-                buscado = municipiosConSede.get(i);
-            }
-        }
-        return buscado;
-    }
-
-    public void actualizarSucursal(Sucursal sucursal, Sucursal nuevo) {
-        sucursal = nuevo;
-    }
-
-    public Sucursal buscarSucursal(String codigo) {
-        boolean encontrado = false;
-        Sucursal buscado = null;
-        for (int i = 0; i < sucursales.size() && !encontrado; i++) {
-            if (sucursales.get(i).getCodigo().contentEquals(codigo)) {
-                encontrado = true;
-                buscado = sucursales.get(i);
-            }
-        }
-        return buscado;
-    }
-
-    public void actualizarCargo(Cargo cargo, Cargo nuevo) {
-        cargo = nuevo;
+    public void actualizarCargo(Cargo cargo) {
+        actualizarCargoDataBase(cargo);
     }
 
     public Cargo buscarCargo(String codigo) {
-        boolean encontrado = false;
-        Cargo buscado = null;
-        for (int i = 0; i < cargos.size() && !encontrado; i++) {
-            if (cargos.get(i).getCodigo().contentEquals(codigo)) {
-                encontrado = true;
-                buscado = cargos.get(i);
+        for (Cargo cargo : cargos) {
+            if (cargo.getCodigo().equals(codigo)) {
+                return cargo;
             }
         }
-        return buscado;
+        return null;
     }
 
-    public void actualizarProfesion(Profesion profesion, Profesion nuevo) {
-        profesion = nuevo;
-    }
-
-    public Profesion buscarProfesion(String codigo) {
-        boolean encontrado = false;
-        Profesion buscado = null;
-        for (int i = 0; i <profesiones.size() && !encontrado; i++) {
-            if(profesiones.get(i).getCodigo().contentEquals(codigo)){
-                encontrado = true;
-                buscado = profesiones.get(i);
+    public Cargo buscarCargoPorNombre(String nombre) {
+        for (Cargo cargo : cargos) {
+            if (cargo.getNombre().equals(nombre)) {
+                return cargo;
             }
         }
-        return buscado;
+        return null;
     }
-
-    public void actualizarEmpleado(Empleado empleado, Empleado nuevo){
-        empleado = nuevo;
-    }
-
-    public Empleado buscarEmpleado(String codigo){
-        boolean encontrado = false;
-        Empleado buscado = null;
-        for (int i = 0; i < empleados.size() && !encontrado; i++) {
-            if(empleados.get(i).getCodigo().contentEquals(codigo)){
-                encontrado = true;
-                buscado = empleados.get(i);
+    public Municipio buscarMunicipioPorNombre(String nombre) {
+        for (Municipio municipio : municipiosConSede) {
+            if (municipio.getNombre().equalsIgnoreCase(nombre)) {
+                return municipio;
             }
         }
-        return buscado;
+        return null;
+    }
+    public Profesion buscarProfesionPorNombre(String nombre) {
+        for (Profesion profesion : profesiones) {
+            if (profesion.getNombre().equalsIgnoreCase(nombre)) {
+                return profesion;
+            }
+        }
+        return null;
+    }
+    public Sucursal buscarSucursalPorNombre(String nombre) {
+        for (Sucursal sucursal : sucursales) {
+            if (sucursal.getNombre().equalsIgnoreCase(nombre)) {
+                return sucursal;
+            }
+        }
+        return null;
+    }
+    public TipoMunicipio buscarTipoMunicipioPorNombre(String nombre) {
+        for (TipoMunicipio tipoMunicipio : tiposMunicipios) {
+            if (tipoMunicipio.getNombre().equalsIgnoreCase(nombre)) {
+                return tipoMunicipio;
+            }
+        }
+        return null;
+    }
+    public Departamento buscarDepartamentoPorNombre(String nombre) {
+        for (Departamento departamento : departamentosConSede) {
+            if (departamento.getNombre().equalsIgnoreCase(nombre)) {
+                return departamento;
+            }
+        }
+        return null;
     }
 
-    public void actualizarContrato(Contrato contrato, Contrato nuevo) {
-        contrato = nuevo;
+
+    public void eliminarCargoConCodigo(String codigo) {
+        Cargo cargo = buscarCargo(codigo);
+        if (cargo != null) {
+            eliminarCargo(cargo);
+        } else {
+            System.out.println("No se encontró un cargo con el código " + codigo + ".");
+        }
+    }
+
+    // Métodos CRUD para Contrato
+    public void agregarContratoDataBase(Contrato contrato) {
+        String sql = "INSERT INTO TContrato (CNumero, CFecha, CCodigoEmpleado, CCodigoSucursal) VALUES (?, ?, ?, ?)";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+
+            declaracion.setString(1, contrato.getNumero());
+            declaracion.setDate(2, Date.valueOf(contrato.getFecha()));
+            declaracion.setString(3, contrato.getEmpleado().getCodigo());
+            declaracion.setString(4, contrato.getSucursal().getCodigo());
+            int filasAfectadas = declaracion.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("El contrato con número " + contrato.getNumero() + " ha sido agregado.");
+                contratos.add(contrato);
+            } else {
+                System.out.println("No se pudo agregar el contrato con número " + contrato.getNumero() + ".");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void eliminarContratoDataBase(Contrato contrato) {
+        String sql = "DELETE FROM TContrato WHERE CNumero = ?";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+
+            declaracion.setString(1, contrato.getNumero());
+            int filasAfectadas = declaracion.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("El contrato con número " + contrato.getNumero() + " ha sido eliminado.");
+                contratos.remove(contrato);
+            } else {
+                System.out.println("No se pudo eliminar el contrato con número " + contrato.getNumero() + ".");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void actualizarContratoDataBase(Contrato contrato) {
+        String sql = "UPDATE TContrato SET CFecha = ?, CCodigoEmpleado = ?, CCodigoSucursal = ? WHERE CNumero = ?";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+
+            declaracion.setDate(1, Date.valueOf(contrato.getFecha()));
+            declaracion.setString(2, contrato.getEmpleado().getCodigo());
+            declaracion.setString(3, contrato.getSucursal().getCodigo());
+            declaracion.setString(4, contrato.getNumero());
+            int filasAfectadas = declaracion.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("El contrato con número " + contrato.getNumero() + " ha sido actualizado.");
+            } else {
+                System.out.println("No se pudo actualizar el contrato con número " + contrato.getNumero() + ".");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void agregarContrato(Contrato contrato) {
+        agregarContratoDataBase(contrato);
+    }
+
+    public void eliminarContrato(Contrato contrato) {
+        eliminarContratoDataBase(contrato);
+    }
+
+    public void actualizarContrato(Contrato contrato) {
+        actualizarContratoDataBase(contrato);
     }
 
     public Contrato buscarContrato(String codigo) {
-        boolean encontrado = false;
-        Contrato buscado = null;
-        for (int i = 0; i < contratos.size() && !encontrado; i++) {
-            if (contratos.get(i).getCodigo().contentEquals(codigo)) {
-                encontrado = true;
-                buscado = contratos.get(i);
+        for (Contrato contrato : contratos) {
+            if (contrato.getNumero().equals(codigo)) {
+                return contrato;
             }
         }
-        return buscado;
+        return null;
     }
 
-    public void actualizarUsuario(Usuario usuario, Usuario nuevo) {
-        usuario.setUsuario(nuevo.getUsuario());
-        usuario.setContrasenia(nuevo.getContrasenia());
+    public void eliminarContratoConCodigo(String codigo) {
+        Contrato contrato = buscarContrato(codigo);
+        if (contrato != null) {
+            eliminarContrato(contrato);
+        } else {
+            System.out.println("No se encontró un contrato con el número " + codigo + ".");
+        }
     }
 
-    public Usuario buscarUsuario(String usuario) {
-        boolean encontrado = false;
-        Usuario buscado = null;
-        for (int i = 0; i < usuarios.size() && !encontrado; i++) {
-            if (usuarios.get(i).getUsuario().contentEquals(usuario)) {
-                encontrado = true;
-                buscado = usuarios.get(i);
+    // Métodos CRUD para Departamento
+    public void agregarDepartamentoConSedeDataBase(Departamento departamento) {
+        String sql = "INSERT INTO TDepartamento (DCodigo, DNombre) VALUES (?, ?)";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+
+            declaracion.setString(1, departamento.getCodigo());
+            declaracion.setString(2, departamento.getNombre());
+            int filasAfectadas = declaracion.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("El departamento con código " + departamento.getCodigo() + " ha sido agregado.");
+                departamentosConSede.add(departamento);
+            } else {
+                System.out.println("No se pudo agregar el departamento con código " + departamento.getCodigo() + ".");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void eliminarDepartamentoConSedeDataBase(Departamento departamento) {
+        String sql = "DELETE FROM TDepartamento WHERE DCodigo = ?";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+
+            declaracion.setString(1, departamento.getCodigo());
+            int filasAfectadas = declaracion.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("El departamento con código " + departamento.getCodigo() + " ha sido eliminado.");
+                departamentosConSede.remove(departamento);
+            } else {
+                System.out.println("No se pudo eliminar el departamento con código " + departamento.getCodigo() + ".");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void actualizarDepartamentoConSedeDataBase(Departamento departamento) {
+        String sql = "UPDATE TDepartamento SET DNombre = ? WHERE DCodigo = ?";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+
+            declaracion.setString(1, departamento.getNombre());
+            declaracion.setString(2, departamento.getCodigo());
+            int filasAfectadas = declaracion.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("El departamento con código " + departamento.getCodigo() + " ha sido actualizado.");
+            } else {
+                System.out.println("No se pudo actualizar el departamento con código " + departamento.getCodigo() + ".");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void agregarDepartamentoConSede(Departamento departamento) {
+        agregarDepartamentoConSedeDataBase(departamento);
+    }
+
+    public void eliminarDepartamentoConSede(Departamento departamento) {
+        eliminarDepartamentoConSedeDataBase(departamento);
+    }
+
+    public void actualizarDepartamentoConSede(Departamento departamento) {
+        actualizarDepartamentoConSedeDataBase(departamento);
+    }
+
+    public Departamento buscarDepartamentoConSede(String codigo) {
+        for (Departamento departamento : departamentosConSede) {
+            if (departamento.getCodigo().equals(codigo)) {
+                return departamento;
             }
         }
-        return buscado;
-    }
-
-    public void eliminarUsuario(Usuario usuario) {
-        usuarios.remove(usuario);
-    }
-    public void eliminarUsuarioConNombre(String nombre) {
-        Usuario usuario = buscarUsuario(nombre);
-        if(usuario != null){
-            eliminarUsuario(usuario);
-        }
+        return null;
     }
 
     public ArrayList<Cargo> getCargos() {
@@ -518,17 +412,559 @@ public class Banco {
         this.usuarios = usuarios;
     }
 
-    public void agregarProfesion(Profesion profesion){
-        profesiones.add(profesion);
+    public ArrayList<Profesion> getProfesiones() {
+        return profesiones;
     }
 
-    public void eliminarProfesion(Profesion profesion){
-        profesiones.remove(profesion);
+    public void setProfesiones(ArrayList<Profesion> profesiones) {
+        this.profesiones = profesiones;
     }
-    public void eliminarProfesionConCodigo(String codigo){
+
+    public void eliminarDepartamentoConSedeConCodigo(String codigo) {
+        Departamento departamento = buscarDepartamentoConSede(codigo);
+        if (departamento != null) {
+            eliminarDepartamentoConSede(departamento);
+        } else {
+            System.out.println("No se encontró un departamento con el código " + codigo + ".");
+        }
+    }
+
+    // Métodos CRUD para Municipio
+    public void agregarMunicipioConSedeDataBase(Municipio municipio) {
+        String sql = "INSERT INTO TMunicipio (MCodigo, MNombre) VALUES (?, ?)";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+
+            declaracion.setString(1, municipio.getCodigo());
+            declaracion.setString(2, municipio.getNombre());
+            int filasAfectadas = declaracion.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("El municipio con código " + municipio.getCodigo() + " ha sido agregado.");
+                municipiosConSede.add(municipio);
+            } else {
+                System.out.println("No se pudo agregar el municipio con código " + municipio.getCodigo() + ".");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void eliminarMunicipioConSedeDataBase(Municipio municipio) {
+        String sql = "DELETE FROM TMunicipio WHERE MCodigo = ?";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+
+            declaracion.setString(1, municipio.getCodigo());
+            int filasAfectadas = declaracion.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("El municipio con código " + municipio.getCodigo() + " ha sido eliminado.");
+                municipiosConSede.remove(municipio);
+            } else {
+                System.out.println("No se pudo eliminar el municipio con código " + municipio.getCodigo() + ".");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void actualizarMunicipioConSedeDataBase(Municipio municipio) {
+        String sql = "UPDATE TMunicipio SET MNombre = ? WHERE MCodigo = ?";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+
+            declaracion.setString(1, municipio.getNombre());
+            declaracion.setString(2, municipio.getCodigo());
+            int filasAfectadas = declaracion.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("El municipio con código " + municipio.getCodigo() + " ha sido actualizado.");
+            } else {
+                System.out.println("No se pudo actualizar el municipio con código " + municipio.getCodigo() + ".");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void agregarMunicipioConSede(Municipio municipio) {
+        agregarMunicipioConSedeDataBase(municipio);
+    }
+
+    public void eliminarMunicipioConSede(Municipio municipio) {
+        eliminarMunicipioConSedeDataBase(municipio);
+    }
+
+    public void actualizarMunicipioConSede(Municipio municipio) {
+        actualizarMunicipioConSedeDataBase(municipio);
+    }
+
+    public Municipio buscarMunicipioConSede(String codigo) {
+        for (Municipio municipio : municipiosConSede) {
+            if (municipio.getCodigo().equals(codigo)) {
+                return municipio;
+            }
+        }
+        return null;
+    }
+
+    public void eliminarMunicipioConSedeConCodigo(String codigo) {
+        Municipio municipio = buscarMunicipioConSede(codigo);
+        if (municipio != null) {
+            eliminarMunicipioConSede(municipio);
+        } else {
+            System.out.println("No se encontró un municipio con el código " + codigo + ".");
+        }
+    }
+
+    // Implementa el mismo patrón para las demás entidades: Empleado, Sucursal, TipoMunicipio, Usuario, Profesion
+    // A continuación, se proporciona un ejemplo para Empleado:
+
+    // Métodos CRUD para Empleado
+    public void agregarEmpleadoDataBase(Empleado empleado) {
+        String sql = "INSERT INTO TEmpleado (ECodigo, ENombre, ESalario) VALUES (?, ?, ?)";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+
+            declaracion.setString(1, empleado.getCodigo());
+            declaracion.setString(2, empleado.getNombre());
+            declaracion.setDouble(3, empleado.getContrato().getCargo().getSalario());
+            int filasAfectadas = declaracion.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("El empleado con código " + empleado.getCodigo() + " ha sido agregado.");
+                empleados.add(empleado);
+            } else {
+                System.out.println("No se pudo agregar el empleado con código " + empleado.getCodigo() + ".");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void eliminarEmpleadoDataBase(Empleado empleado) {
+        String sql = "DELETE FROM TEmpleado WHERE ECodigo = ?";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+
+            declaracion.setString(1, empleado.getCodigo());
+            int filasAfectadas = declaracion.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("El empleado con código " + empleado.getCodigo() + " ha sido eliminado.");
+                empleados.remove(empleado);
+            } else {
+                System.out.println("No se pudo eliminar el empleado con código " + empleado.getCodigo() + ".");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void actualizarEmpleadoDataBase(Empleado empleado) {
+        String sql = "UPDATE TEmpleado SET ENombre = ?, ESalario = ? WHERE ECodigo = ?";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+
+            declaracion.setString(1, empleado.getNombre());
+            declaracion.setDouble(2, empleado.getContrato().getCargo().getSalario());
+            declaracion.setString(3, empleado.getCodigo());
+            int filasAfectadas = declaracion.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("El empleado con código " + empleado.getCodigo() + " ha sido actualizado.");
+            } else {
+                System.out.println("No se pudo actualizar el empleado con código " + empleado.getCodigo() + ".");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void agregarEmpleado(Empleado empleado) {
+        agregarEmpleadoDataBase(empleado);
+    }
+
+    public void eliminarEmpleado(Empleado empleado) {
+        eliminarEmpleadoDataBase(empleado);
+    }
+
+    public void actualizarEmpleado(Empleado empleado) {
+        actualizarEmpleadoDataBase(empleado);
+    }
+
+    public Empleado buscarEmpleado(String codigo) {
+        for (Empleado empleado : empleados) {
+            if (empleado.getCodigo().equals(codigo)) {
+                return empleado;
+            }
+        }
+        return null;
+    }
+
+    public void eliminarEmpleadoConCodigo(String codigo) {
+        Empleado empleado = buscarEmpleado(codigo);
+        if (empleado != null) {
+            eliminarEmpleado(empleado);
+        } else {
+            System.out.println("No se encontró un empleado con el código " + codigo + ".");
+        }
+    }
+
+    // Métodos CRUD para Sucursal
+    public void agregarSucursalDataBase(Sucursal sucursal) {
+        String sql = "INSERT INTO TSucursal (SCodigo, SNombre) VALUES (?, ?)";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+
+            declaracion.setString(1, sucursal.getCodigo());
+            declaracion.setString(2, sucursal.getNombre());
+            int filasAfectadas = declaracion.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("La sucursal con código " + sucursal.getCodigo() + " ha sido agregada.");
+                sucursales.add(sucursal);
+            } else {
+                System.out.println("No se pudo agregar la sucursal con código " + sucursal.getCodigo() + ".");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void eliminarSucursalDataBase(Sucursal sucursal) {
+        String sql = "DELETE FROM TSucursal WHERE SCodigo = ?";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+
+            declaracion.setString(1, sucursal.getCodigo());
+            int filasAfectadas = declaracion.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("La sucursal con código " + sucursal.getCodigo() + " ha sido eliminada.");
+                sucursales.remove(sucursal);
+            } else {
+                System.out.println("No se pudo eliminar la sucursal con código " + sucursal.getCodigo() + ".");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void actualizarSucursalDataBase(Sucursal sucursal) {
+        String sql = "UPDATE TSucursal SET SNombre = ? WHERE SCodigo = ?";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+
+            declaracion.setString(1, sucursal.getNombre());
+            declaracion.setString(2, sucursal.getCodigo());
+            int filasAfectadas = declaracion.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("La sucursal con código " + sucursal.getCodigo() + " ha sido actualizada.");
+            } else {
+                System.out.println("No se pudo actualizar la sucursal con código " + sucursal.getCodigo() + ".");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void agregarSucursal(Sucursal sucursal) {
+        agregarSucursalDataBase(sucursal);
+    }
+
+    public void eliminarSucursal(Sucursal sucursal) {
+        eliminarSucursalDataBase(sucursal);
+    }
+
+    public void actualizarSucursal(Sucursal sucursal) {
+        actualizarSucursalDataBase(sucursal);
+    }
+
+    public Sucursal buscarSucursal(String codigo) {
+        for (Sucursal sucursal : sucursales) {
+            if (sucursal.getCodigo().equals(codigo)) {
+                return sucursal;
+            }
+        }
+        return null;
+    }
+
+    public void eliminarSucursalConCodigo(String codigo) {
+        Sucursal sucursal = buscarSucursal(codigo);
+        if (sucursal != null) {
+            eliminarSucursal(sucursal);
+        } else {
+            System.out.println("No se encontró una sucursal con el código " + codigo + ".");
+        }
+    }
+
+    // Métodos CRUD para TipoMunicipio
+    public void agregarTipoMunicipioDataBase(TipoMunicipio tipoMunicipio) {
+        String sql = "INSERT INTO TTipoMunicipio (TMCodigo, TMNombre) VALUES (?, ?)";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+
+            declaracion.setString(1, tipoMunicipio.getCodigo());
+            declaracion.setString(2, tipoMunicipio.getNombre());
+            int filasAfectadas = declaracion.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("El tipo de municipio con código " + tipoMunicipio.getCodigo() + " ha sido agregado.");
+                tiposMunicipios.add(tipoMunicipio);
+            } else {
+                System.out.println("No se pudo agregar el tipo de municipio con código " + tipoMunicipio.getCodigo() + ".");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void eliminarTipoMunicipioDataBase(TipoMunicipio tipoMunicipio) {
+        String sql = "DELETE FROM TTipoMunicipio WHERE TMCodigo = ?";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+
+            declaracion.setString(1, tipoMunicipio.getCodigo());
+            int filasAfectadas = declaracion.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("El tipo de municipio con código " + tipoMunicipio.getCodigo() + " ha sido eliminado.");
+                tiposMunicipios.remove(tipoMunicipio);
+            } else {
+                System.out.println("No se pudo eliminar el tipo de municipio con código " + tipoMunicipio.getCodigo() + ".");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void actualizarTipoMunicipioDataBase(TipoMunicipio tipoMunicipio) {
+        String sql = "UPDATE TTipoMunicipio SET TMNombre = ? WHERE TMCodigo = ?";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+
+            declaracion.setString(1, tipoMunicipio.getNombre());
+            declaracion.setString(2, tipoMunicipio.getCodigo());
+            int filasAfectadas = declaracion.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("El tipo de municipio con código " + tipoMunicipio.getCodigo() + " ha sido actualizado.");
+            } else {
+                System.out.println("No se pudo actualizar el tipo de municipio con código " + tipoMunicipio.getCodigo() + ".");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void agregarTipoMunicipio(TipoMunicipio tipoMunicipio) {
+        agregarTipoMunicipioDataBase(tipoMunicipio);
+    }
+
+    public void eliminarTipoMunicipio(TipoMunicipio tipoMunicipio) {
+        eliminarTipoMunicipioDataBase(tipoMunicipio);
+    }
+
+    public void actualizarTipoMunicipio(TipoMunicipio tipoMunicipio) {
+        actualizarTipoMunicipioDataBase(tipoMunicipio);
+    }
+
+    public TipoMunicipio buscarTipoMunicipio(String codigo) {
+        for (TipoMunicipio tipoMunicipio : tiposMunicipios) {
+            if (tipoMunicipio.getCodigo().equals(codigo)) {
+                return tipoMunicipio;
+            }
+        }
+        return null;
+    }
+
+    public void eliminarTipoMunicipioConCodigo(String codigo) {
+        TipoMunicipio tipoMunicipio = buscarTipoMunicipio(codigo);
+        if (tipoMunicipio != null) {
+            eliminarTipoMunicipio(tipoMunicipio);
+        } else {
+            System.out.println("No se encontró un tipo de municipio con el código " + codigo + ".");
+        }
+    }
+
+    // Métodos CRUD para Usuario
+    public void agregarUsuarioDataBase(Usuario usuario) {
+        String sql = "INSERT INTO TUsuario (ULogin, CClave) VALUES (?, ?, ?)";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+
+            declaracion.setString(1, usuario.getUsuario());
+            declaracion.setString(2, usuario.getContrasenia());
+            int filasAfectadas = declaracion.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("El usuario " + usuario.getUsuario() + " ha sido agregado.");
+                usuarios.add(usuario);
+            } else {
+                System.out.println("No se pudo agregar el usuario " + usuario.getUsuario() + ".");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void eliminarUsuarioDataBase(Usuario usuario) {
+        String sql = "DELETE FROM TUsuario WHERE ULogin = ?";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+
+            declaracion.setString(1, usuario.getUsuario());
+            int filasAfectadas = declaracion.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("El usuario " + usuario.getUsuario() + " ha sido eliminado.");
+                usuarios.remove(usuario);
+            } else {
+                System.out.println("No se pudo eliminar el usuario " + usuario.getUsuario() + ".");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void actualizarUsuarioDataBase(Usuario usuario) {
+        String sql = "UPDATE TUsuario SET ULogin = ?, UClave = ? WHERE ULogin = ?";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+
+            declaracion.setString(1, usuario.getUsuario());
+            declaracion.setString(2, usuario.getContrasenia());
+            int filasAfectadas = declaracion.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("El usuario " + usuario.getUsuario() + " ha sido actualizado.");
+            } else {
+                System.out.println("No se pudo actualizar el usuario " + usuario.getUsuario() + ".");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void agregarUsuario(Usuario usuario) {
+        agregarUsuarioDataBase(usuario);
+    }
+
+    public void eliminarUsuario(Usuario usuario) {
+        eliminarUsuarioDataBase(usuario);
+    }
+
+    public void actualizarUsuario(Usuario usuario) {
+        actualizarUsuarioDataBase(usuario);
+    }
+
+    public Usuario buscarUsuario(String usuario) {
+        for (Usuario nombre : usuarios) {
+            if (nombre.getUsuario().equals(usuario)) {
+                return nombre;
+            }
+        }
+        return null;
+    }
+
+    public void eliminarUsuarioConCodigo(String codigo) {
+        Usuario usuario = buscarUsuario(codigo);
+        if (usuario != null) {
+            eliminarUsuario(usuario);
+        } else {
+            System.out.println("No se encontró un usuario con el código " + codigo + ".");
+        }
+    }
+
+    // Métodos CRUD para Profesion
+    public void agregarProfesionDataBase(Profesion profesion) {
+        String sql = "INSERT INTO TProfesion (PCodigo, PNombre) VALUES (?, ?)";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+
+            declaracion.setString(1, profesion.getCodigo());
+            declaracion.setString(2, profesion.getNombre());
+            int filasAfectadas = declaracion.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("La profesión con código " + profesion.getCodigo() + " ha sido agregada.");
+                profesiones.add(profesion);
+            } else {
+                System.out.println("No se pudo agregar la profesión con código " + profesion.getCodigo() + ".");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void eliminarProfesionDataBase(Profesion profesion) {
+        String sql = "DELETE FROM TProfesion WHERE PCodigo = ?";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+
+            declaracion.setString(1, profesion.getCodigo());
+            int filasAfectadas = declaracion.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("La profesión con código " + profesion.getCodigo() + " ha sido eliminada.");
+                profesiones.remove(profesion);
+            } else {
+                System.out.println("No se pudo eliminar la profesión con código " + profesion.getCodigo() + ".");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void actualizarProfesionDataBase(Profesion profesion) {
+        String sql = "UPDATE TProfesion SET PNombre = ? WHERE PCodigo = ?";
+        try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
+             PreparedStatement declaracion = conexion.prepareStatement(sql)) {
+
+            declaracion.setString(1, profesion.getNombre());
+            declaracion.setString(2, profesion.getCodigo());
+            int filasAfectadas = declaracion.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                System.out.println("La profesión con código " + profesion.getCodigo() + " ha sido actualizada.");
+            } else {
+                System.out.println("No se pudo actualizar la profesión con código " + profesion.getCodigo() + ".");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void agregarProfesion(Profesion profesion) {
+        agregarProfesionDataBase(profesion);
+    }
+
+    public void eliminarProfesion(Profesion profesion) {
+        eliminarProfesionDataBase(profesion);
+    }
+
+    public void actualizarProfesion(Profesion profesion) {
+        actualizarProfesionDataBase(profesion);
+    }
+
+    public Profesion buscarProfesion(String codigo) {
+        for (Profesion profesion : profesiones) {
+            if (profesion.getCodigo().equals(codigo)) {
+                return profesion;
+            }
+        }
+        return null;
+    }
+
+    public void eliminarProfesionConCodigo(String codigo) {
         Profesion profesion = buscarProfesion(codigo);
-        if(profesion != null){
+        if (profesion != null) {
             eliminarProfesion(profesion);
+        } else {
+            System.out.println("No se encontró una profesión con el código " + codigo + ".");
         }
     }
 }
