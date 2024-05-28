@@ -18,6 +18,11 @@ public class HelloController {
         TipoMuNombreMunicipio.getItems().addAll("Grande", "Mediano", "Pequeño");
         TipoMuNombreMunicipio.setValue("Pequeño");
         EmpleGeneroEmpleado.getItems().addAll("Hombre","Mujer");
+        Profesion profesion = new Profesion("7","a");
+        Empleado empleado = new Empleado("1","1","1","1","1","1",LocalDate.now(),profesion);
+        Usuario usuario = new Usuario("Admin", "Admin",empleado);
+        BancoABC.agregarEmpleado(empleado);
+        BancoABC.agregarUsuario(usuario);
 
     }
 
@@ -258,11 +263,9 @@ public class HelloController {
     @FXML
     private void HandleIniciarSesion() {
 
-        Empleado empleado = new Empleado("","","","","","",null,null);
-        Usuario usuario = new Usuario("Admin", "Admin",empleado);
-        BancoABC.getUsuarios().set(1,usuario);
-
         boolean Bandera = BancoABC.iniciarSesion(NombreSesion.getText(),ContrasenaSesion.getText());
+
+        System.out.println(Bandera);
 
         if(Bandera){
             PanePrincipal.setVisible(true);
