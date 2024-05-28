@@ -10,6 +10,7 @@ public class BaseDeDatosUtil {
     private static final String RUTA_BASE_DATOS = "/DataBase.accdb";
 
     public static Connection obtenerConexion() throws SQLException {
+        System.setProperty("hsqldb.method_class_names", "net.ucanaccess.converters.*"); // see http://hsqldb.org/doc/2.0/guide/sqlroutines-chapt.html#src_jrt_access_control
         try {
             URL resource = BaseDeDatosUtil.class.getResource(RUTA_BASE_DATOS);
             if (resource == null) {
@@ -18,9 +19,6 @@ public class BaseDeDatosUtil {
             String rutaBaseDatos = new java.io.File(resource.toURI()).getAbsolutePath();
             String urlConexion = "jdbc:ucanaccess://" + rutaBaseDatos;
             Connection conexion = DriverManager.getConnection(urlConexion);
-
-            // Asegurarse de que la conexión no esté en modo autocommit
-            conexion.setAutoCommit(false);
 
             return conexion;
         } catch (URISyntaxException e) {

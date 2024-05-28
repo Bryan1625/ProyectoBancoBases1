@@ -18,20 +18,9 @@ public class Banco {
     public static void main(String[] args) {
         Banco banco = new Banco();
 
-        // Verificar cargos antes de la inserción
-        System.out.println("Cargos antes de la inserción:");
-        banco.verificarTablaCargos();
-
         // Intentar agregar un nuevo cargo
         Cargo nuevoCargo = new Cargo("5", "NuevoCargo", 5000.0, "Descripción");
         banco.agregarCargoDataBase(nuevoCargo);
-
-        // Verificar cargos después de la inserción
-        System.out.println("Cargos después de la inserción:");
-        banco.verificarTablaCargos();
-
-        // Verificar el cargo específico recién agregado
-        banco.verificarCargo("5");
     }
 
     public void verificarCargo(String codigo) {
