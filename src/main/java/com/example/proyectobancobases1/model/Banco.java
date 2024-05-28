@@ -29,57 +29,58 @@ public class Banco {
         this.profesiones = new ArrayList<>();
     }
 
-    public static void main(String[] args) {
-        Banco banco = new Banco();
-
-
-        // Prueba con Departamento
-        Departamento nuevoDepartamento = new Departamento("009", "NuevoDepartamento", 123);
-        banco.agregarDepartamentoConSede(nuevoDepartamento);
-        banco.eliminarDepartamentoConSede(nuevoDepartamento);
-
-        // Prueba con Departamento
-        Cargo nuevoCargo = new Cargo("009", "NuevoCargo", 123, "1");
-        banco.agregarCargo(nuevoCargo);
-        banco.eliminarCargo(nuevoCargo);
-
-        // Prueba con TipoMunicipio
-        TipoMunicipio nuevoTipoMunicipio = new TipoMunicipio("009", "Rural");
-        banco.agregarTipoMunicipio(nuevoTipoMunicipio);
-        banco.eliminarTipoMunicipio(nuevoTipoMunicipio);
-
-        // Prueba con Municipio
-        Municipio nuevoMunicipio = new Municipio("009", "NuevoMunicipio", 123, nuevoTipoMunicipio, nuevoDepartamento.getNombre());
-        banco.agregarMunicipioConSede(nuevoMunicipio);
-        banco.eliminarMunicipioConSede(nuevoMunicipio);
-
-        // Prueba con Profesion
-        Profesion nuevaProfesion = new Profesion("009", "Ingeniero");
-        banco.agregarProfesion(nuevaProfesion);
-        banco.eliminarProfesion(nuevaProfesion);
-
-        // Prueba con Sucursal
-        Sucursal nuevaSucursal = new Sucursal("009", "NuevaSucursal", nuevoMunicipio, nuevoDepartamento, 12345);
-        banco.agregarSucursal(nuevaSucursal);
-        banco.eliminarSucursal(nuevaSucursal);
-
-        // Prueba con Empleado
-        Empleado nuevoEmpleado = new Empleado("009", "123456789", "Juan Pérez", "Cra E", "1234567890", "M", LocalDate.of(1990, 1, 1), nuevaProfesion);
-        banco.agregarEmpleado(nuevoEmpleado);
-        banco.eliminarEmpleado(nuevoEmpleado);
-
-        // Prueba con Contrato
-        Contrato nuevoContrato = new Contrato("007", "Contrato de prueba", LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 31), nuevaSucursal, nuevoCargo, nuevoEmpleado);
-        banco.agregarContrato(nuevoContrato);
-        banco.eliminarContrato(nuevoContrato);
-
-    }
+//    public static void main(String[] args) {
+//        Banco banco = new Banco();
+//
+//
+//        // Prueba con Departamento
+//        Departamento nuevoDepartamento = new Departamento("09", "NuevoDepartamento", 123);
+//        banco.agregarDepartamentoConSede(nuevoDepartamento);
+//        banco.eliminarDepartamentoConSede(nuevoDepartamento);
+//
+//        // Prueba con Departamento
+//        Cargo nuevoCargo = new Cargo("9", "NuevoCargo", 123, "1");
+//        banco.agregarCargo(nuevoCargo);
+//        banco.eliminarCargo(nuevoCargo);
+//
+//        // Prueba con TipoMunicipio
+//        TipoMunicipio nuevoTipoMunicipio = new TipoMunicipio("9", "Rural");
+//        banco.agregarTipoMunicipio(nuevoTipoMunicipio);
+//        banco.eliminarTipoMunicipio(nuevoTipoMunicipio);
+//
+//        // Prueba con Municipio
+//        Municipio nuevoMunicipio = new Municipio("009", "NuevoMunicipio", 123, nuevoTipoMunicipio, nuevoDepartamento.getNombre());
+//        banco.agregarMunicipioConSede(nuevoMunicipio);
+//        banco.eliminarMunicipioConSede(nuevoMunicipio);
+//
+//        // Prueba con Profesion
+//        Profesion nuevaProfesion = new Profesion("9", "Ingeniero");
+//        banco.agregarProfesion(nuevaProfesion);
+//        banco.eliminarProfesion(nuevaProfesion);
+//
+//        // Prueba con Sucursal
+//        Sucursal nuevaSucursal = new Sucursal("009", "NuevaSucursal", nuevoMunicipio, nuevoDepartamento, 12345);
+//        banco.agregarSucursal(nuevaSucursal);
+//        banco.eliminarSucursal(nuevaSucursal);
+//
+//        // Prueba con Empleado
+//        Empleado nuevoEmpleado = new Empleado("9", "123456789", "Juan Pérez", "Cra E", "1234567890", "M", LocalDate.of(1990, 1, 1), nuevaProfesion);
+//        banco.agregarEmpleado(nuevoEmpleado);
+//        banco.eliminarEmpleado(nuevoEmpleado);
+//
+//        // Prueba con Contrato
+//        Contrato nuevoContrato = new Contrato("007", "Contrato de prueba", LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 31), nuevaSucursal, nuevoCargo, nuevoEmpleado);
+//        banco.agregarContrato(nuevoContrato);
+//        banco.eliminarContrato(nuevoContrato);
+//
+//    }
 
 
     ///////////////////CONSULTAS PEDIDAS QUE DEBE HACER LA APP///////////////////////
     /*
     EN ESTA SECCION SE HARAN LAS CONSULTAS (5?), PEDIDAS POR EL PROFESOR
      */
+
     /////////////////////////////////////////////////////////////////////////////////
 
     // Métodos CRUD para Cargo
@@ -225,14 +226,18 @@ public class Banco {
 
     // Métodos CRUD para Contrato
     public void agregarContratoDataBase(Contrato contrato) {
-        String sql = "INSERT INTO TContrato (CNumero, CFecha, CCodigoEmpleado, CCodigoSucursal) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO TContrato (CNumero, CFecha, CFechaInicio, CFechaTerminacion,  CSucursal, CEmpleado, CCargo, CDescripcion) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
              PreparedStatement declaracion = conexion.prepareStatement(sql)) {
 
             declaracion.setString(1, contrato.getNumero());
             declaracion.setDate(2, Date.valueOf(contrato.getFecha()));
-            declaracion.setString(3, contrato.getEmpleado().getCodigo());
-            declaracion.setString(4, contrato.getSucursal().getCodigo());
+            declaracion.setDate(3, Date.valueOf(contrato.getFechaInicio()));
+            declaracion.setDate(4, Date.valueOf(contrato.getFechaTerminacion()));
+            declaracion.setString(5, contrato.getSucursal().getCodigo());
+            declaracion.setString(6, contrato.getEmpleado().getCodigo());
+            declaracion.setString(7, contrato.getCargo().getCodigo());
+            declaracion.setString(8, contrato.getDescripcion());
             int filasAfectadas = declaracion.executeUpdate();
 
             if (filasAfectadas > 0) {
@@ -318,7 +323,7 @@ public class Banco {
 
     // Métodos CRUD para Departamento
     public void agregarDepartamentoConSedeDataBase(Departamento departamento) {
-        String sql = "INSERT INTO TDepartamento (DCodigo, DNombre) VALUES (?, ?)";
+        String sql = "INSERT INTO TDepto (DCodigo, DNombre) VALUES (?, ?)";
         try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
              PreparedStatement declaracion = conexion.prepareStatement(sql)) {
 
@@ -338,7 +343,7 @@ public class Banco {
     }
 
     public void eliminarDepartamentoConSedeDataBase(Departamento departamento) {
-        String sql = "DELETE FROM TDepartamento WHERE DCodigo = ?";
+        String sql = "DELETE FROM TDepto WHERE DCodigo = ?";
         try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
              PreparedStatement declaracion = conexion.prepareStatement(sql)) {
 
@@ -583,14 +588,19 @@ public class Banco {
 
     // Métodos CRUD para Empleado
     public void agregarEmpleadoDataBase(Empleado empleado) {
-        String sql = "INSERT INTO TEmpleado (ECodigo, ECedula, ENombre, ETelefono, EDireccion, EProfesion, EGenero, EFechaNto) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO TEmpleado (ECodigo, ECedula, ENombre, ETelefono, EDireccion," +
+                "EProfesion, EGenero, EFechaNto) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
              PreparedStatement declaracion = conexion.prepareStatement(sql)) {
 
             declaracion.setString(1, empleado.getCodigo());
-            declaracion.setString(2, empleado.getNombre());
-            declaracion.setDouble(3, empleado.getContrato().getCargo().getSalario());
-            declaracion.setDouble(4, empleado.getContrato().getCargo().getSalario());
+            declaracion.setString(2, empleado.getCedula());
+            declaracion.setString(3, empleado.getNombre());
+            declaracion.setString(4, empleado.getTelefono());
+            declaracion.setString(5, empleado.getDireccion());
+            declaracion.setString(6, empleado.getProfesion().getCodigo());
+            declaracion.setString(7, empleado.getGenero());
+            declaracion.setDate(8, Date.valueOf(empleado.getFechaNacimiento()));
             int filasAfectadas = declaracion.executeUpdate();
 
             if (filasAfectadas > 0) {
@@ -624,13 +634,19 @@ public class Banco {
     }
 
     public void actualizarEmpleadoDataBase(Empleado empleado) {
-        String sql = "UPDATE TEmpleado SET ENombre = ?, ESalario = ? WHERE ECodigo = ?";
+        String sql = "UPDATE TEmpleado SET ECedula = ?, ENombre = ?, ETelefono = ?, EDireccion = ?, EProfesion = ?, EGenero = ?, EFechaNto = ? WHERE ECodigo = ?";
         try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
              PreparedStatement declaracion = conexion.prepareStatement(sql)) {
 
-            declaracion.setString(1, empleado.getNombre());
-            declaracion.setDouble(2, empleado.getContrato().getCargo().getSalario());
-            declaracion.setString(3, empleado.getCodigo());
+            declaracion.setString(1, empleado.getCedula());
+            declaracion.setString(2, empleado.getNombre());
+            declaracion.setString(3, empleado.getTelefono());
+            declaracion.setString(4, empleado.getDireccion());
+            declaracion.setString(5, empleado.getProfesion().getCodigo());
+            declaracion.setString(6, empleado.getGenero());
+            declaracion.setDate(7, Date.valueOf(empleado.getFechaNacimiento()));
+            declaracion.setString(8, empleado.getCodigo());
+
             int filasAfectadas = declaracion.executeUpdate();
 
             if (filasAfectadas > 0) {
@@ -642,6 +658,7 @@ public class Banco {
             e.printStackTrace();
         }
     }
+
 
     public void agregarEmpleado(Empleado empleado) {
         agregarEmpleadoDataBase(empleado);
@@ -853,12 +870,14 @@ public class Banco {
 
     // Métodos CRUD para Usuario
     public void agregarUsuarioDataBase(Usuario usuario) {
-        String sql = "INSERT INTO TUsuario (ULogin, CClave) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO TUsuario (ULogin, UEmpleado, UClave, UFechaCre) VALUES (?, ?, ?, ?)";
         try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
              PreparedStatement declaracion = conexion.prepareStatement(sql)) {
 
             declaracion.setString(1, usuario.getUsuario());
-            declaracion.setString(2, usuario.getContrasenia());
+            declaracion.setString(2, usuario.getEmpleado().getCodigo());
+            declaracion.setString(3, usuario.getContrasenia());
+            declaracion.setDate(4, Date.valueOf(usuario.getFechaCreacion()));
             int filasAfectadas = declaracion.executeUpdate();
 
             if (filasAfectadas > 0) {
@@ -892,12 +911,13 @@ public class Banco {
     }
 
     public void actualizarUsuarioDataBase(Usuario usuario) {
-        String sql = "UPDATE TUsuario SET ULogin = ?, UClave = ? WHERE ULogin = ?";
+        String sql = "UPDATE TUsuario SET ULogin = ?, UClave = ? WHERE UEmpleado = ?";
         try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
              PreparedStatement declaracion = conexion.prepareStatement(sql)) {
 
             declaracion.setString(1, usuario.getUsuario());
             declaracion.setString(2, usuario.getContrasenia());
+            declaracion.setString(3, usuario.getEmpleado().getCodigo());
             int filasAfectadas = declaracion.executeUpdate();
 
             if (filasAfectadas > 0) {
