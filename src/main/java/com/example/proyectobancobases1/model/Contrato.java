@@ -3,56 +3,84 @@ package com.example.proyectobancobases1.model;
 import java.time.LocalDate;
 
 public class Contrato {
-    private String codigo;
-    private String fechaInicio, fechaFinal;
-    private String sucursal;
-    private String cargo;
+    private String numero, descripcion;
+    private LocalDate fechaInicio, fechaTerminacion, fecha;
+    private Sucursal sucursal;
+    private Cargo cargo;
+    private Empleado empleado;
 
-    public Contrato(String codigo, String fechaInicio, String fechaFinal, String sucursal, String cargo) {
-        this.codigo = codigo;
+    public Contrato(String numero, String descripcion, LocalDate fechaInicio, LocalDate fechaTerminacion, Sucursal sucursal, Cargo cargo, Empleado empleado) {
+        this.numero = numero;
+        this.descripcion = descripcion;
         this.fechaInicio = fechaInicio;
-        this.fechaFinal = fechaFinal;
+        this.fechaTerminacion = fechaTerminacion;
+        this.fecha = LocalDate.now();
         this.sucursal = sucursal;
         this.cargo = cargo;
+        this.empleado = empleado;
     }
 
-    public String getCodigo() {
-        return codigo;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
-    public String getFechaInicio() {
+    public LocalDate getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
+    }
+
+    public Empleado getEmpleado() {
+        return empleado;
+    }
+
+    public void setEmpleado(Empleado empleado) {
+        this.empleado = empleado;
+    }
+
+    public String getNumero() {
+        return numero;
+    }
+
+    public void setNumero(String numero) {
+        this.numero = numero;
+    }
+
+    public LocalDate getFechaInicio() {
         return fechaInicio;
     }
 
-    public void setFechaInicio(String fechaInicio) {
+    public void setFechaInicio(LocalDate fechaInicio) {
         this.fechaInicio = fechaInicio;
     }
 
-    public String getFechaFinal() {
-        return fechaFinal;
+    public LocalDate getFechaTerminacion() {
+        return fechaTerminacion;
     }
 
-    public void setFechaFinal(String fechaFinal) {
-        this.fechaFinal = fechaFinal;
+    public void setFechaTerminacion(LocalDate fechaTerminacion) {
+        this.fechaTerminacion = fechaTerminacion;
     }
 
-    public String getSucursal() {
+    public Sucursal getSucursal() {
         return sucursal;
     }
 
-    public void setSucursal(String sucursal) {
+    public void setSucursal(Sucursal sucursal) {
         this.sucursal = sucursal;
     }
 
-    public String getCargo() {
+    public Cargo getCargo() {
         return cargo;
     }
 
-    public void setCargo(String cargo) {
+    public void setCargo(Cargo cargo) {
         this.cargo = cargo;
     }
 }

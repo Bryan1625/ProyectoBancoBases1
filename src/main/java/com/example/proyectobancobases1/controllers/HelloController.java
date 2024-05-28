@@ -7,6 +7,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import org.apache.poi.ss.formula.eval.NumberEval;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -571,7 +572,7 @@ public class HelloController {
 
         GetDataMun();
 
-        Municipio NuevoMunicipio = new Municipio(codigoMunicipio,nombreMunicipio,poblacionMunicipio,tipoMunicipio,departamentoUbica);
+        Municipio NuevoMunicipio = new Municipio(codigoMunicipio,nombreMunicipio,poblacionMunicipio,BancoABC.buscarTipoMunicipio(tipoMunicipio),departamentoUbica);
 
         BancoABC.agregarMunicipioConSede(NuevoMunicipio);
 
@@ -639,7 +640,7 @@ public class HelloController {
 
         GetDataSuc();
 
-        Sucursal NuevaSucursal = new Sucursal(codigoSucursal,nombreSucursal,municipioSucursal,departamentoSucursal,presupuestoAsignado);
+        Sucursal NuevaSucursal = new Sucursal(codigoSucursal,nombreSucursal,BancoABC.buscarMunicipioPorNombre(municipioSucursal),BancoABC.buscarDepartamentoPorNombre(departamentoSucursal),presupuestoAsignado);
 
         BancoABC.agregarSucursal(NuevaSucursal);
 
@@ -802,7 +803,7 @@ public class HelloController {
     private String direccionEmpleado;
     private String profesionEmpleado;
     private String generoEmpleado;
-    private String fechaNacimiento;
+    private LocalDate fechaNacimiento;
     private String edadEmpleado;
 
     private void GetDataEmpleado(){
@@ -812,7 +813,7 @@ public class HelloController {
         direccionEmpleado = EmpleDireccionEmpleado.getText();
         profesionEmpleado = EmpleProfesionEmpleado.getValue().toString();
         generoEmpleado = EmpleGeneroEmpleado.getValue().toString();
-        fechaNacimiento = EmpleFechaNacimiento.getValue().toString();
+        fechaNacimiento = EmpleFechaNacimiento.getValue();
         edadEmpleado = EmpleEdadEmpleado.getText();
 
     }
@@ -822,7 +823,9 @@ public class HelloController {
 
         GetDataEmpleado();
 
-        Empleado NuevoEmpleado = new Empleado(cedulaEmpleado,nombreEmpleado,direccionEmpleado,telefonoEmpleado,profesionEmpleado);
+        Profesion profesion = BancoABC.buscarProfesionPorNombre(profesionEmpleado);
+
+        Empleado NuevoEmpleado = new Empleado(cedulaEmpleado,cedulaEmpleado,nombreEmpleado,direccionEmpleado,generoEmpleado,fechaNacimiento,);
 
         BancoABC.agregarEmpleado(NuevoEmpleado);
 
@@ -871,21 +874,23 @@ public class HelloController {
 
     private String numeroContrato;
     private String fechaContrato;
-    private String fechaInicio;
-    private String fechaTerminacion;
+    private LocalDate fechaInicio;
+    private LocalDate fechaTerminacion;
     private String cargoContrato;
     private String sucursalContrato;
-    private String empleado;
+    private String empleadoContrato;
+    private String descripcionContrato;
 
     private void GetDataTransaccion(){
 
         numeroContrato = TransNumeroContrato.getText();
         fechaContrato = TransFechaContrato.getValue().toString();
-        fechaInicio = TransFechaInicio.getValue().toString();
-        fechaTerminacion = TransFechaTerminacion.getValue().toString();
+        fechaInicio = TransFechaInicio.getValue();
+        fechaTerminacion = TransFechaTerminacion.getValue();
         cargoContrato = TransCargoContrato.getValue().toString();
         sucursalContrato = TransSucursalContrato.getValue().toString();
-        empleado = TransEmpleado.getValue().toString();
+        empleadoContrato = TransEmpleado.getValue().toString();
+        descripcionContrato = TransDescripcionContrato.getText();
     }
 
     @FXML
@@ -893,14 +898,18 @@ public class HelloController {
 
         GetDataTransaccion();
 
-        Contrato NuevoContrato = new Contrato(numeroContrato,fechaInicio,fechaTerminacion,sucursalContrato,cargoContrato);
+        Sucursal sucursal = BancoABC.buscarSucursalPorNombre(sucursalContrato);
+        Cargo cargo = BancoABC.buscarCargoPorNombre(cargoContrato);
+        Empleado empleado = BancoABC.buscarEmpleado(empleadoContrato);
+
+        Contrato NuevoContrato = new Contrato(numeroContrato,descripcionContrato,fechaInicio,fechaTerminacion,sucursal,cargo,empleado);
 
         BancoABC.agregarContrato(NuevoContrato);
 
         for (int i =0; i< BancoABC.getContratos().size();i++){
             System.out.println("Contratos: "+BancoABC.getContratos().get(i));
 
-            System.out.println("Contratos: "+BancoABC.getContratos().get(i).getCodigo());
+            System.out.println("Contratos: "+BancoABC.getContratos().get(i).getNumero());
         }
 
 
@@ -937,7 +946,9 @@ public class HelloController {
 
         GetDataUsuarios();
 
-        Usuario NuevoUsuario = new Usuario(loginUsuario,claveUsuario,codigoEmpleado);
+        Empleado empleado = BancoABC.buscarEmpleado(codigoEmpleado);
+
+        Usuario NuevoUsuario = new Usuario(loginUsuario,claveUsuario,empleado);
 
         BancoABC.agregarUsuario(NuevoUsuario);
 

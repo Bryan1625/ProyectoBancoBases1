@@ -1,13 +1,21 @@
 package com.example.proyectobancobases1.model;
 
+import java.time.LocalDate;
+
 public class Usuario {
     private String usuario,contrasenia;
-    private String empleado;
+    private Empleado empleado;
+    private LocalDate fechaCreacion;
 
-    public Usuario(String usuario, String contrasenia, String empleado) {
+    public Usuario(String usuario, String contrasenia, Empleado empleado) {
         this.usuario = usuario;
         this.contrasenia = contrasenia;
         this.empleado = empleado;
+        this.fechaCreacion = LocalDate.now();
+    }
+
+    public String getNivelUsuario(){
+        return empleado.getContrato().getCargo().getNivelUsuario();
     }
 
     public Usuario() {
@@ -29,11 +37,19 @@ public class Usuario {
         this.contrasenia = contrasenia;
     }
 
-    public String getEmpleado() {
+    public Empleado getEmpleado() {
         return empleado;
     }
 
-    public void setEmpleado(String empleado) {
+    public void setEmpleado(Empleado empleado) {
         this.empleado = empleado;
+    }
+
+    public LocalDate getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(LocalDate fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
     }
 }
