@@ -8,6 +8,9 @@ public class TipoMunicipio {
         this.nombre = nombre;
         this.codigo = codigo;
     }
+    public TipoMunicipio(){
+
+    }
 
     public String getNombre() {
         return nombre;

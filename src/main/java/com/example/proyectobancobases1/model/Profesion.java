@@ -8,6 +8,9 @@ public class Profesion {
         this.codigo = codigo;
         this.nombre = nombre;
     }
+    public Profesion(){
+
+    }
 
     public String getCodigo() {
         return codigo;

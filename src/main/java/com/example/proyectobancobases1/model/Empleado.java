@@ -20,6 +20,7 @@ public class Empleado {
         this.contrato = null;
     }
 
+
     public Empleado(String codigo, String nombre, String genero) {
         this.codigo = codigo;
         this.nombre = nombre;

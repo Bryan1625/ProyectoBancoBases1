@@ -13,6 +13,9 @@ public class Departamento {
         this.poblacion = poblacion;
         this.municipios = municipios;
     }
+    public Departamento(){
+
+    }
 
     public Departamento(String codigo, String nombre,int poblacion){
         this.codigo = codigo;

@@ -12,6 +12,9 @@ public class Cargo {
         this.nivelUsuario = nivelUsuario;
     }
 
+    public Cargo() {
+    }
+
     public String getNivelUsuario() {
         return nivelUsuario;
     }

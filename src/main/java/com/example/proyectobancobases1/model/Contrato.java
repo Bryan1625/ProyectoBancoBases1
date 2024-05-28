@@ -20,6 +20,9 @@ public class Contrato {
         this.empleado = empleado;
     }
 
+    public Contrato() {
+    }
+
     public String getDescripcion() {
         return descripcion;
     }

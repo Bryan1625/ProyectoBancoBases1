@@ -28,7 +28,214 @@ public class Banco {
         this.tiposMunicipios = new ArrayList<>();
         this.usuarios = new ArrayList<>();
         this.profesiones = new ArrayList<>();
+        inicializarDatosBanco();
     }
+
+    public void inicializarDatosBanco(){
+        try {
+            // Prueba con Departamento
+            Departamento nuevoDepartamento = new Departamento("09", "NuevoDepartamento", 123);
+            agregarDepartamentoConSede(nuevoDepartamento);
+
+            // Prueba con Departamento
+            Cargo nuevoCargo = new Cargo("9", "NuevoCargo", 123, "1");
+            agregarCargo(nuevoCargo);
+
+            // Prueba con TipoMunicipio
+            TipoMunicipio nuevoTipoMunicipio = new TipoMunicipio("9", "Rural");
+            agregarTipoMunicipio(nuevoTipoMunicipio);
+
+            // Prueba con Municipio
+            Municipio nuevoMunicipio = new Municipio("009", "NuevoMunicipio", 123, nuevoTipoMunicipio, nuevoDepartamento.getNombre());
+            agregarMunicipioConSede(nuevoMunicipio);
+
+            // Prueba con Profesion
+            Profesion nuevaProfesion = new Profesion("9", "Ingeniero");
+            agregarProfesion(nuevaProfesion);
+
+            // Prueba con Sucursal
+            Sucursal nuevaSucursal = new Sucursal("009", "NuevaSucursal", nuevoMunicipio, nuevoDepartamento, 12345);
+            agregarSucursal(nuevaSucursal);
+
+            // Prueba con Empleado
+            Empleado nuevoEmpleado = new Empleado("9", "123456789", "Juan Pérez", "Cra E", "1234567890", "M", LocalDate.of(1990, 1, 1), nuevaProfesion);
+            agregarEmpleado(nuevoEmpleado);
+
+            // Prueba con Contrato
+            Contrato nuevoContrato = new Contrato("007", "Contrato de prueba", LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 31), nuevaSucursal, nuevoCargo, nuevoEmpleado);
+            agregarContrato(nuevoContrato);
+
+
+            inicializarCargos(BaseDeDatosUtil.obtenerConexion());
+            inicializarContratos(BaseDeDatosUtil.obtenerConexion());
+            inicializarDepartamentos(BaseDeDatosUtil.obtenerConexion());
+            inicializarMunicipios(BaseDeDatosUtil.obtenerConexion());
+            inicializarEmpleados(BaseDeDatosUtil.obtenerConexion());
+            inicializarProfesiones(BaseDeDatosUtil.obtenerConexion());
+            inicializarSucursales(BaseDeDatosUtil.obtenerConexion());
+            inicializarTiposMunicipios(BaseDeDatosUtil.obtenerConexion());
+            inicializarUsuarios(BaseDeDatosUtil.obtenerConexion());
+
+            for (Empleado empleado : empleados) {
+                System.out.println(empleado.getNombre());
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void inicializarCargos(Connection conexion) {
+        String query = "SELECT * FROM TCargo";
+        try (Statement statement = conexion.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+            while (resultSet.next()) {
+                Cargo cargo = new Cargo();
+                cargo.setCodigo(resultSet.getString("CCodigo"));
+                cargo.setNombre(resultSet.getString("CNombre"));
+                cargo.setSalario(resultSet.getDouble("CSalario"));
+                this.cargos.add(cargo);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public void inicializarContratos(Connection conexion) {
+        String query = "SELECT * FROM TContrato";
+        try (Statement statement = conexion.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+            while (resultSet.next()) {
+                Contrato contrato = new Contrato();
+                contrato.setNumero(resultSet.getString("CNumero"));
+                // Establecer los demás atributos...
+                this.contratos.add(contrato);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Método para inicializar los datos de la tabla Departamento
+    public void inicializarDepartamentos(Connection conexion) {
+        String query = "SELECT * FROM TDepto";
+        try (Statement statement = conexion.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+            while (resultSet.next()) {
+                Departamento departamento = new Departamento();
+                departamento.setCodigo(resultSet.getString("DCodigo"));
+                // Establecer los demás atributos...
+                this.departamentosConSede.add(departamento);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Método para inicializar los datos de la tabla Municipio
+    public void inicializarMunicipios(Connection conexion) {
+        String query = "SELECT * FROM TMunicipio";
+        try (Statement statement = conexion.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+            while (resultSet.next()) {
+                Municipio municipio = new Municipio();
+                municipio.setCodigo(resultSet.getString("MCodigo"));
+                // Establecer los demás atributos...
+                this.municipiosConSede.add(municipio);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Método para inicializar los datos de la tabla Empleado
+    public void inicializarEmpleados(Connection conexion) {
+        String query = "SELECT * FROM TEmpleado";
+        try (Statement statement = conexion.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+            while (resultSet.next()) {
+                Empleado empleado = new Empleado();
+                empleado.setCodigo(resultSet.getString("ECodigo"));
+                empleado.setNombre(resultSet.getString("ENombre"));
+                empleado.setCedula(resultSet.getString("ECedula"));
+                empleado.setContrato(buscarContrato(resultSet.getString("EContrato")));
+                empleado.setDireccion(resultSet.getString("EDireccion"));
+                empleado.setGenero(resultSet.getString("EGenero"));
+                empleado.setTelefono(resultSet.getString("ETelefono"));
+                empleado.setFechaNacimiento(resultSet.getDate("EFechaNto").toLocalDate());
+                this.empleados.add(empleado);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Método para inicializar los datos de la tabla Sucursal
+    public void inicializarSucursales(Connection conexion) {
+        String query = "SELECT * FROM TSucursal";
+        try (Statement statement = conexion.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+            while (resultSet.next()) {
+                Sucursal sucursal = new Sucursal();
+                sucursal.setCodigo(resultSet.getString("SCodigo"));
+                // Establecer los demás atributos...
+                this.sucursales.add(sucursal);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Método para inicializar los datos de la tabla TipoMunicipio
+    public void inicializarTiposMunicipios(Connection conexion) {
+        String query = "SELECT * FROM TTipoMunicipio";
+        try (Statement statement = conexion.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+            while (resultSet.next()) {
+                TipoMunicipio tipoMunicipio = new TipoMunicipio();
+                tipoMunicipio.setCodigo(resultSet.getString("TMCodigo"));
+                // Establecer los demás atributos...
+                this.tiposMunicipios.add(tipoMunicipio);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Método para inicializar los datos de la tabla Usuario
+    public void inicializarUsuarios(Connection conexion) {
+        String query = "SELECT * FROM TUsuario";
+        try (Statement statement = conexion.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+            while (resultSet.next()) {
+                Usuario usuario = new Usuario();
+                usuario.setUsuario(resultSet.getString("ULogin"));
+                // Establecer los demás atributos...
+                this.usuarios.add(usuario);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Método para inicializar los datos de la tabla Profesion
+    public void inicializarProfesiones(Connection conexion) {
+        String query = "SELECT * FROM TProfesion";
+        try (Statement statement = conexion.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+            while (resultSet.next()) {
+                Profesion profesion = new Profesion();
+                profesion.setCodigo(resultSet.getString("PCodigo"));
+                // Establecer los demás atributos...
+                this.profesiones.add(profesion);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        Banco banco = new Banco();
+    }
+
 
 //    public static void main(String[] args) {
 //        Banco banco = new Banco();
@@ -223,7 +430,7 @@ public class Banco {
                 String telefono = resultado.getString("ETelefono");
                 String genero = resultado.getString("EGenero");
                 LocalDate fechaNacimiento = resultado.getDate("EFechaNto").toLocalDate();
-                Profesion profesion = new Profesion(resultado.getString("EProfesion"), buscarProfesion(resultado.getString("EProfesion")).getNombre()); // Aquí debes llenar el segundo parámetro con el nombre de la profesión, si lo tienes disponible en la tabla
+                Profesion profesion = new Profesion(resultado.getString("EProfesion"), buscarProfesion(resultado.getString("EProfesion")).getNombre());
                 Empleado empleado = new Empleado(codigo, cedula, nombre, direccion, telefono, genero, fechaNacimiento, profesion);
                 empleados.add(empleado);
             }
@@ -250,7 +457,7 @@ public class Banco {
                 String telefono = resultado.getString("ETelefono");
                 String genero = resultado.getString("EGenero");
                 LocalDate fechaNacimiento = resultado.getDate("EFechaNto").toLocalDate();
-                Profesion profesion = new Profesion(resultado.getString("EProfesion"), buscarProfesion(resultado.getString("EProfesion")).getNombre()); // Aquí debes llenar el segundo parámetro con el nombre de la profesión, si lo tienes disponible en la tabla
+                Profesion profesion = new Profesion(resultado.getString("EProfesion"), buscarProfesion(resultado.getString("EProfesion")).getNombre());
                 Empleado empleado = new Empleado(codigo, cedula, nombre, direccion, telefono, genero, fechaNacimiento, profesion);
                 empleados.add(empleado);
             }
