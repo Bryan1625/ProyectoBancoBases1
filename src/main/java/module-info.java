@@ -5,6 +5,7 @@ module com.example.proyectobancobases1 {
     requires poi.ooxml;
     requires java.sql;
     requires java.desktop;
+    requires jasperreports;
 
 
     opens com.example.proyectobancobases1 to javafx.fxml;

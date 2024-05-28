@@ -79,7 +79,7 @@ public class Banco {
 
     ///////////////////CONSULTAS PEDIDAS QUE DEBE HACER LA APP///////////////////////
     /*
-    EN ESTA SECCION SE HARAN LAS CONSULTAS (5?), PEDIDAS POR EL PROFESOR
+    EN ESTA SECCION SE HARAN LAS CONSULTAS (6), PEDIDAS POR EL PROFESOR
      */
     public List<Empleado> obtenerEmpleadosPorSucursal(String nombreSucursal) {
         List<Empleado> empleados = new ArrayList<>();
