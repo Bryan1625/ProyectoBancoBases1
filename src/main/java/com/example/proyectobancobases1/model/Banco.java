@@ -1070,7 +1070,7 @@ public class Banco {
 
             if (filasAfectadas > 0) {
                 System.out.println("El usuario " + usuario.getUsuario() + " ha sido agregado.");
-                usuarios.add(usuario);
+
             } else {
                 System.out.println("No se pudo agregar el usuario " + usuario.getUsuario() + ".");
             }
@@ -1120,7 +1120,10 @@ public class Banco {
 
     public void agregarUsuario(Usuario usuario) {
         agregarUsuarioDataBase(usuario);
+        usuarios.add(usuario);
     }
+
+
 
     public void eliminarUsuario(Usuario usuario) {
         eliminarUsuarioDataBase(usuario);
