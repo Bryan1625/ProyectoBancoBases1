@@ -1224,4 +1224,18 @@ public class Banco {
             System.out.println("No se encontró una profesión con el código " + codigo + ".");
         }
     }
+
+    public boolean iniciarSesion(String Nombre, String clave){
+
+
+        for (Usuario usuario : usuarios) {
+
+            if (usuario.getUsuario().equals(Nombre) && usuario.getContrasenia().equals(clave)) {
+
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

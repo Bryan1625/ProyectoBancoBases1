@@ -1097,5 +1097,43 @@
             </AnchorPane>
          </children>
       </Pane>
+      <Pane fx:id="PanePrincipal1" layoutX="10.0" layoutY="10.0" prefHeight="602.0" prefWidth="861.0" style="-fx-background-color: null;" visible="false">
+         <children>
+            <AnchorPane prefHeight="602.0" prefWidth="861.0" style="-fx-background-color: &quot;881B1B&quot;;">
+               <children>
+                  <Button fx:id="BtnEntidades1" layoutX="332.0" layoutY="145.0" mnemonicParsing="false" onAction="#HandleEntidades" prefHeight="31.0" prefWidth="197.0" style="-fx-background-color: NULL; -fx-border-color: white;" text="Entidades" textFill="WHITE">
+                     <font>
+                        <Font name="Arial" size="16.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="BtnTransacciones1" layoutX="332.0" layoutY="226.0" mnemonicParsing="false" onAction="#HandleTransacciones" prefHeight="31.0" prefWidth="197.0" style="-fx-background-color: null; -fx-border-color: white;" text="Transacciones" textFill="WHITE">
+                     <font>
+                        <Font name="Arial" size="16.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="BtnReportes1" layoutX="332.0" layoutY="301.0" mnemonicParsing="false" onAction="#HandleReportes" prefHeight="31.0" prefWidth="197.0" style="-fx-background-color: null; -fx-border-color: white;" text="Reportes / Consultas" textFill="WHITE">
+                     <font>
+                        <Font name="Arial" size="16.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="BtnUtilidades1" layoutX="332.0" layoutY="378.0" mnemonicParsing="false" onAction="#HandleUtilidades" prefHeight="31.0" prefWidth="197.0" style="-fx-background-color: null; -fx-border-color: white;" text="Utilidades" textFill="WHITE">
+                     <font>
+                        <Font name="Arial" size="16.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="BtnAyudas1" layoutX="332.0" layoutY="459.0" mnemonicParsing="false" onAction="#HandleAyudas" prefHeight="31.0" prefWidth="197.0" style="-fx-background-color: null; -fx-border-color: white;" text="Ayudas" textFill="WHITE">
+                     <font>
+                        <Font name="Arial" size="16.0" />
+                     </font>
+                  </Button>
+                  <Text fill="WHITE" layoutX="322.0" layoutY="77.0" strokeType="OUTSIDE" strokeWidth="0.0" text="BANCO ABC">
+                     <font>
+                        <Font name="Times New Roman Bold" size="36.0" />
+                     </font>
+                  </Text>
+               </children>
+            </AnchorPane>
+         </children>
+      </Pane>
    </children>
 </Pane>

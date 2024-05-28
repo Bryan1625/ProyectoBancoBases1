@@ -257,8 +257,17 @@ public class HelloController {
 
     @FXML
     private void HandleIniciarSesion() {
-        PanePrincipal.setVisible(true);
-        PaneInicioSesion.setVisible(false);
+
+        Empleado empleado = new Empleado("","","","","","",null,null);
+        Usuario usuario = new Usuario("Admin", "Admin",empleado);
+        BancoABC.getUsuarios().set(1,usuario);
+
+        boolean Bandera = BancoABC.iniciarSesion(NombreSesion.getText(),ContrasenaSesion.getText());
+
+        if(Bandera){
+            PanePrincipal.setVisible(true);
+            PaneInicioSesion.setVisible(false);
+        }
     }
 
     private void MovPrincipal (Pane pane){
@@ -461,15 +470,31 @@ public class HelloController {
     @FXML //EDITA DEPARTAMENTO NUEVO
     private void DepBtnEditar(){
 
+        GetDataDep();
+
+        Departamento departamento = BancoABC.buscarDepartamentoPorNombre(nombreDepartamento);
+
+        BancoABC.actualizarDepartamentoConSede(departamento);
+
     }
 
     @FXML //ELIMINA UN DEPARTAMENTO
     private void DepBtnEliminar(){
 
+        GetDataDep();
+
+        Departamento departamento = BancoABC.buscarDepartamentoPorNombre(nombreDepartamento);
+
+        BancoABC.eliminarDepartamentoConSede(departamento);
+
     }
 
     @FXML //BUSCA UN DEPARTAMENTO
     private void DepBtnBuscar(){
+
+        GetDataDep();
+
+        BancoABC.buscarEmpleado(codigoDepartamento);
 
     }
 
@@ -526,13 +551,29 @@ public class HelloController {
     @FXML //ELIMINA UN TIPO MUNICIPIO
     private void TipoMuBtnEliminar(){
 
+        GetDataTipoMu();
+
+        TipoMunicipio tipoMunicipio = BancoABC.buscarTipoMunicipioPorNombre(nombreTipoMunicipio);
+
+        BancoABC.eliminarTipoMunicipio(tipoMunicipio);
+
     }
     @FXML //EDITAR UN TIPO MUNICIPIO
     private void TipoMuBtnEditar(){
 
+        GetDataTipoMu();
+
+        TipoMunicipio tipoMunicipio = BancoABC.buscarTipoMunicipioPorNombre(nombreTipoMunicipio);
+
+        BancoABC.actualizarTipoMunicipio(tipoMunicipio);
+
     }
     @FXML //BUSCAR UN TIPO MUNICIPIO
     private void TipoMuBtnBuscar(){
+
+        GetDataTipoMu();
+
+        BancoABC.buscarTipoMunicipio(codigoTipoMunicipio);
 
     }
 
@@ -585,19 +626,31 @@ public class HelloController {
             System.out.println("Nombre: "+BancoABC.getMunicipiosConSede().get(i).getNombre());
         }
 
-
-
     }
     @FXML
     private void MunBtnEditar(){
 
+        GetDataMun();
+
+        Municipio municipio = BancoABC.buscarMunicipioPorNombre(nombreMunicipio);
+
+        BancoABC.actualizarMunicipioConSede(municipio);
     }
     @FXML
     private void MunBtnEliminar(){
 
+        GetDataMun();
+
+        Municipio municipio = BancoABC.buscarMunicipioPorNombre(nombreMunicipio);
+
+        BancoABC.eliminarMunicipioConSede(municipio);
     }
     @FXML
     private void MunBtnBuscar(){
+
+        GetDataMun();
+
+        BancoABC.buscarMunicipioConSede(codigoMunicipio);
 
     }
 
@@ -656,13 +709,29 @@ public class HelloController {
     @FXML
     private void SucBtnEliminar(){
 
+        GetDataSuc();
+
+        Sucursal sucursal = BancoABC.buscarSucursalPorNombre(nombreSucursal);
+
+        BancoABC.eliminarSucursal(sucursal);
+
     }
     @FXML
     private void SucBtnEditar(){
 
+        GetDataSuc();
+
+        Sucursal sucursal = BancoABC.buscarSucursalPorNombre(nombreSucursal);
+
+        BancoABC.actualizarSucursal(sucursal);
+
     }
     @FXML
     private void SucBtnBuscar(){
+
+        GetDataSuc();
+
+        BancoABC.buscarSucursal(codigoSucursal);
 
     }
 
@@ -720,13 +789,29 @@ public class HelloController {
     @FXML
     private void CarBtnEliminar(){
 
+        GetDataCargo();
+
+        Cargo cargo = BancoABC.buscarCargoPorNombre(nombreCargo);
+
+        BancoABC.eliminarCargo(cargo);
+
     }
     @FXML
     private void CarBtnEditar(){
 
+        GetDataCargo();
+
+        Cargo cargo = BancoABC.buscarCargoPorNombre(nombreCargo);
+
+        BancoABC.actualizarCargo(cargo);
+
     }
     @FXML
     private void CarBtnBuscar(){
+
+        GetDataCargo();
+
+        BancoABC.buscarCargo(codigoCargo);
 
     }
 
@@ -772,13 +857,29 @@ public class HelloController {
     @FXML
     private void ProfBtnEliminar(){
 
+        GetDataProfesion();
+
+        Profesion profesion = BancoABC.buscarProfesionPorNombre(nombreProfesion);
+
+        BancoABC.eliminarProfesion(profesion);
+
     }
     @FXML
     private void ProfBtnEditar(){
 
+        GetDataProfesion();
+
+        Profesion profesion = BancoABC.buscarProfesionPorNombre(nombreProfesion);
+
+        BancoABC.actualizarProfesion(profesion);
+
     }
     @FXML
     private void ProfBtnBuscar(){
+
+        GetDataProfesion();
+
+        BancoABC.buscarProfesion(codigoProfesionCargo);
 
     }
 
@@ -823,9 +924,9 @@ public class HelloController {
 
         GetDataEmpleado();
 
-        Profesion profesion = BancoABC.buscarProfesionPorNombre(profesionEmpleado);
+        Profesion ProfesionEmpleado = BancoABC.buscarProfesionPorNombre(profesionEmpleado);
 
-        Empleado NuevoEmpleado = new Empleado(cedulaEmpleado,cedulaEmpleado,nombreEmpleado,direccionEmpleado,generoEmpleado,fechaNacimiento,);
+        Empleado NuevoEmpleado = new Empleado(cedulaEmpleado,cedulaEmpleado,nombreEmpleado,direccionEmpleado,telefonoEmpleado,generoEmpleado,fechaNacimiento,ProfesionEmpleado);
 
         BancoABC.agregarEmpleado(NuevoEmpleado);
 
@@ -842,13 +943,28 @@ public class HelloController {
     @FXML
     private void EmpleBtnEliminar(){
 
+        GetDataEmpleado();
+
+        Empleado empleado = BancoABC.buscarEmpleado(cedulaEmpleado);
+
+        BancoABC.eliminarEmpleado(empleado);
+
     }
     @FXML
     private void EmpleBtnEditar(){
 
+        GetDataEmpleado();
+
+        Empleado empleado = BancoABC.buscarEmpleado(cedulaEmpleado);
+
+        BancoABC.actualizarEmpleado(empleado);
     }
     @FXML
     private void EmpleBtnBuscar(){
+
+        GetDataEmpleado();
+
+        BancoABC.buscarEmpleado(cedulaEmpleado);
 
     }
 
@@ -917,13 +1033,29 @@ public class HelloController {
     @FXML
     private void TransBtnEliminar(){
 
+        GetDataTransaccion();
+
+        Contrato contrato = BancoABC.buscarContrato(numeroContrato);
+
+        BancoABC.eliminarContrato(contrato);
+
     }
     @FXML
     private void TransBtnEditar(){
 
+        GetDataTransaccion();
+
+        Contrato contrato = BancoABC.buscarContrato(numeroContrato);
+
+        BancoABC.actualizarContrato(contrato);
+
     }
     @FXML
     private void TransBtnBuscar(){
+
+        GetDataTransaccion();
+
+        BancoABC.buscarContrato(numeroContrato);
 
     }
 
@@ -956,13 +1088,29 @@ public class HelloController {
     @FXML
     private void UtilBtnEliminar(){
 
+        GetDataUsuarios();
+
+        Usuario usuario = BancoABC.buscarUsuario(loginUsuario);
+
+        BancoABC.eliminarUsuario(usuario);
+
     }
     @FXML
     private void UtilBtnEditar(){
 
+        GetDataUsuarios();
+
+        Usuario usuario = BancoABC.buscarUsuario(loginUsuario);
+
+        BancoABC.actualizarUsuario(usuario);
+
     }
     @FXML
     private void UtilBtnBuscar(){
+
+        GetDataUsuarios();
+
+        BancoABC.buscarUsuario(loginUsuario);
 
     }
 
