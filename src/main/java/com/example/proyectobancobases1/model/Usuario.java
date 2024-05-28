@@ -2,9 +2,9 @@ package com.example.proyectobancobases1.model;
 
 public class Usuario {
     private String usuario,contrasenia;
-    private Empleado empleado;
+    private String empleado;
 
-    public Usuario(String usuario, String contrasenia, Empleado empleado) {
+    public Usuario(String usuario, String contrasenia, String empleado) {
         this.usuario = usuario;
         this.contrasenia = contrasenia;
         this.empleado = empleado;
@@ -29,11 +29,11 @@ public class Usuario {
         this.contrasenia = contrasenia;
     }
 
-    public Empleado getEmpleado() {
+    public String getEmpleado() {
         return empleado;
     }
 
-    public void setEmpleado(Empleado empleado) {
+    public void setEmpleado(String empleado) {
         this.empleado = empleado;
     }
 }

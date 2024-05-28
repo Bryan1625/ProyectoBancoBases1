@@ -238,7 +238,7 @@ public class Banco {
         boolean encontrado = false;
         Empleado buscado = null;
         for (int i = 0; i < empleados.size() && !encontrado; i++) {
-            if(empleados.get(i).getCodigo().contentEquals(codigo)){
+            if(empleados.get(i).getCedula().contentEquals(codigo)){
                 encontrado = true;
                 buscado = empleados.get(i);
             }

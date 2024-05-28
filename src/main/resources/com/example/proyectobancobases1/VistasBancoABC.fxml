@@ -251,17 +251,17 @@
                         <Image url="@eliminar.png" />
                      </image>
                   </ImageView>
-                  <Button fx:id="TransBtnGuardar" layoutX="453.0" layoutY="485.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
+                  <Button fx:id="TransBtnGuardar" layoutX="453.0" layoutY="485.0" mnemonicParsing="false" onAction="#TransBtnGuardar" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Button>
-                  <Button fx:id="TransBtnEliminar" layoutX="531.0" layoutY="485.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
+                  <Button fx:id="TransBtnEliminar" layoutX="531.0" layoutY="485.0" mnemonicParsing="false" onAction="#TransBtnEliminar" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Button>
-                  <Button fx:id="TransBtnEditar" layoutX="614.0" layoutY="485.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
+                  <Button fx:id="TransBtnEditar" layoutX="614.0" layoutY="485.0" mnemonicParsing="false" onAction="#TransBtnEditar" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -271,7 +271,7 @@
                         <Image url="@buscar.png" />
                      </image>
                   </ImageView>
-                  <Button fx:id="TransBtnBuscar" layoutX="692.0" layoutY="485.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
+                  <Button fx:id="TransBtnBuscar" layoutX="692.0" layoutY="485.0" mnemonicParsing="false" onAction="#TransBtnBuscar" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -364,9 +364,7 @@
                      </font>
                   </Text>
                   <TextField fx:id="UtilLogin" layoutX="314.0" layoutY="210.0" prefHeight="26.0" prefWidth="230.0" />
-                  <TextField fx:id="UtilCodigoEmpleado" layoutX="314.0" layoutY="256.0" prefHeight="26.0" prefWidth="230.0" />
                   <TextField fx:id="UtilClave" layoutX="314.0" layoutY="300.0" prefHeight="26.0" prefWidth="230.0" />
-                  <TextField fx:id="UtilFechaCreacionUsuario" layoutX="314.0" layoutY="346.0" prefHeight="26.0" prefWidth="230.0" />
                   <ImageView fitHeight="38.0" fitWidth="34.0" layoutX="678.0" layoutY="177.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@guardar.png" />
@@ -387,7 +385,7 @@
                         <Image url="@buscar.png" />
                      </image>
                   </ImageView>
-                  <Button fx:id="UtilBtnGuardar" layoutX="666.0" layoutY="165.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
+                  <Button fx:id="UtilBtnGuardar" layoutX="666.0" layoutY="165.0" mnemonicParsing="false" onAction="#UtilBtnGuardar" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -395,17 +393,17 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
-                  <Button fx:id="UtilBtnEditar" layoutX="667.0" layoutY="229.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
+                  <Button fx:id="UtilBtnEditar" layoutX="667.0" layoutY="229.0" mnemonicParsing="false" onAction="#UtilBtnEditar" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Button>
-                  <Button fx:id="UtilBtnEliminar" layoutX="666.0" layoutY="294.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
+                  <Button fx:id="UtilBtnEliminar" layoutX="666.0" layoutY="294.0" mnemonicParsing="false" onAction="#UtilBtnEliminar" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Button>
-                  <Button fx:id="UtilBtnBuscar" layoutX="666.0" layoutY="360.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
+                  <Button fx:id="UtilBtnBuscar" layoutX="666.0" layoutY="360.0" mnemonicParsing="false" onAction="#UtilBtnBuscar" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -423,6 +421,8 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
+                  <DatePicker fx:id="UtilFechaCreacionUsuario" layoutX="315.0" layoutY="348.0" prefHeight="26.0" prefWidth="230.0" />
+                  <ChoiceBox fx:id="UtilCodigoEmpleado" layoutX="314.0" layoutY="256.0" prefHeight="26.0" prefWidth="230.0" />
                </children>
                <cursor>
                   <Cursor fx:constant="HAND" />
@@ -855,7 +855,7 @@
                         <Image url="@buscar.png" />
                      </image>
                   </ImageView>
-                  <Button fx:id="CarBtnGuardar" layoutX="253.0" layoutY="425.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
+                  <Button fx:id="CarBtnGuardar" layoutX="253.0" layoutY="425.0" mnemonicParsing="false" onAction="#CarBtnGuardar" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -863,7 +863,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
-                  <Button fx:id="CarBtnEditar" layoutX="353.0" layoutY="424.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
+                  <Button fx:id="CarBtnEditar" layoutX="353.0" layoutY="424.0" mnemonicParsing="false" onAction="#CarBtnEditar" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -871,7 +871,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
-                  <Button fx:id="CarBtnEliminar" layoutX="453.0" layoutY="424.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
+                  <Button fx:id="CarBtnEliminar" layoutX="453.0" layoutY="424.0" mnemonicParsing="false" onAction="#CarBtnEliminar" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -879,7 +879,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
-                  <Button fx:id="CarBtnBuscar" layoutX="556.0" layoutY="424.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
+                  <Button fx:id="CarBtnBuscar" layoutX="556.0" layoutY="424.0" mnemonicParsing="false" onAction="#CarBtnBuscar" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -909,7 +909,6 @@
                         <Font size="16.0" />
                      </font>
                   </Text>
-                  <TextField fx:id="ProfCodigoCargo" layoutX="442.0" layoutY="241.0" prefHeight="26.0" prefWidth="230.0" />
                   <Text fill="WHITE" layoutX="216.0" layoutY="337.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nombre de la profesion">
                      <font>
                         <Font size="16.0" />
@@ -936,7 +935,7 @@
                         <Image url="@buscar.png" />
                      </image>
                   </ImageView>
-                  <Button fx:id="ProfBtnGuardar" layoutX="249.0" layoutY="439.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
+                  <Button fx:id="ProfBtnGuardar" layoutX="249.0" layoutY="439.0" mnemonicParsing="false" onAction="#ProfBtnGuardar" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -944,7 +943,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
-                  <Button fx:id="ProfBtnEditar" layoutX="352.0" layoutY="439.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
+                  <Button fx:id="ProfBtnEditar" layoutX="352.0" layoutY="439.0" mnemonicParsing="false" onAction="#ProfBtnEditar" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -952,7 +951,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
-                  <Button fx:id="ProfBtnEliminar" layoutX="451.0" layoutY="439.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
+                  <Button fx:id="ProfBtnEliminar" layoutX="451.0" layoutY="439.0" mnemonicParsing="false" onAction="#ProfBtnEliminar" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -960,7 +959,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
-                  <Button fx:id="ProfBtnBuscar" layoutX="553.0" layoutY="440.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
+                  <Button fx:id="ProfBtnBuscar" layoutX="553.0" layoutY="440.0" mnemonicParsing="false" onAction="#ProfBtnBuscar" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -976,6 +975,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
+                  <ChoiceBox fx:id="ProfCodigoCargo" layoutX="442.0" layoutY="242.0" prefHeight="26.0" prefWidth="228.0" />
                </children>
             </AnchorPane>
             <AnchorPane fx:id="AnchorEmpleados" prefHeight="602.0" prefWidth="861.0" style="-fx-background-color: &quot;881B1B&quot;;" visible="false">
@@ -985,12 +985,6 @@
                         <Font name="Times New Roman Bold" size="36.0" />
                      </font>
                   </Text>
-                  <Text fill="WHITE" layoutX="26.0" layoutY="207.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Codigo del cargo">
-                     <font>
-                        <Font size="16.0" />
-                     </font>
-                  </Text>
-                  <TextField fx:id="EmpleCodigoCargo" layoutX="201.0" layoutY="188.0" prefHeight="26.0" prefWidth="230.0" />
                   <Text fill="WHITE" layoutX="26.0" layoutY="254.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Cedula del empleado">
                      <font>
                         <Font size="16.0" />
@@ -1059,7 +1053,7 @@
                         <Image url="@buscar.png" />
                      </image>
                   </ImageView>
-                  <Button fx:id="EmpleBtrnGuardar" layoutX="262.0" layoutY="468.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
+                  <Button fx:id="EmpleBtnGuardar" layoutX="262.0" layoutY="468.0" mnemonicParsing="false" onAction="#EmpleBtnGuardar" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -1067,7 +1061,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
-                  <Button fx:id="EmpleBtrnEditar" layoutX="353.0" layoutY="468.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
+                  <Button fx:id="EmpleBtnEditar" layoutX="353.0" layoutY="468.0" mnemonicParsing="false" onAction="#EmpleBtnEditar" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -1075,7 +1069,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
-                  <Button fx:id="EmpleBtrnEliminar" layoutX="444.0" layoutY="467.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
+                  <Button fx:id="EmpleBtnEliminar" layoutX="444.0" layoutY="467.0" mnemonicParsing="false" onAction="#EmpleBtnEliminar" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -1083,7 +1077,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
-                  <Button fx:id="EmpleBtrnBuscar" layoutX="539.0" layoutY="467.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
+                  <Button fx:id="EmpleBtnBuscar" layoutX="539.0" layoutY="467.0" mnemonicParsing="false" onAction="#EmpleBtnBuscar" prefHeight="58.0" prefWidth="58.0" style="-fx-background-color: null; -fx-border-color: white; -fx-border-radius: 5px; -fx-label-padding: 0;" textFill="WHITE">
                      <font>
                         <Font size="16.0" />
                      </font>

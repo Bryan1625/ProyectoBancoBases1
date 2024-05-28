@@ -4,11 +4,11 @@ import java.time.LocalDate;
 
 public class Contrato {
     private String codigo;
-    private LocalDate fechaInicio, fechaFinal;
-    private Sucursal sucursal;
-    private Cargo cargo;
+    private String fechaInicio, fechaFinal;
+    private String sucursal;
+    private String cargo;
 
-    public Contrato(String codigo, LocalDate fechaInicio, LocalDate fechaFinal, Sucursal sucursal, Cargo cargo) {
+    public Contrato(String codigo, String fechaInicio, String fechaFinal, String sucursal, String cargo) {
         this.codigo = codigo;
         this.fechaInicio = fechaInicio;
         this.fechaFinal = fechaFinal;
@@ -24,35 +24,35 @@ public class Contrato {
         this.codigo = codigo;
     }
 
-    public LocalDate getFechaInicio() {
+    public String getFechaInicio() {
         return fechaInicio;
     }
 
-    public void setFechaInicio(LocalDate fechaInicio) {
+    public void setFechaInicio(String fechaInicio) {
         this.fechaInicio = fechaInicio;
     }
 
-    public LocalDate getFechaFinal() {
+    public String getFechaFinal() {
         return fechaFinal;
     }
 
-    public void setFechaFinal(LocalDate fechaFinal) {
+    public void setFechaFinal(String fechaFinal) {
         this.fechaFinal = fechaFinal;
     }
 
-    public Sucursal getSucursal() {
+    public String getSucursal() {
         return sucursal;
     }
 
-    public void setSucursal(Sucursal sucursal) {
+    public void setSucursal(String sucursal) {
         this.sucursal = sucursal;
     }
 
-    public Cargo getCargo() {
+    public String getCargo() {
         return cargo;
     }
 
-    public void setCargo(Cargo cargo) {
+    public void setCargo(String cargo) {
         this.cargo = cargo;
     }
 }
