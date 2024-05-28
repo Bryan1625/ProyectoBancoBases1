@@ -76,6 +76,11 @@ public class Banco {
 //
 //    }
 
+//    public static void main(String[] args) {
+//        Banco banco = new Banco();
+//        BaseDeDatosUtil.generarReporteEmpleadosPorSucursal(banco, "Norte");
+//    }
+
 
     ///////////////////CONSULTAS PEDIDAS QUE DEBE HACER LA APP///////////////////////
     /*
@@ -258,6 +263,13 @@ public class Banco {
 
 
     /////////////////////////////////////////////////////////////////////////////////
+
+
+
+    ///////////////////////////////////REPORTES/////////////////////////////////////
+
+
+    ////////////////////////////////////////////////////////////////////////////////
 
     // Métodos CRUD para Cargo
     public void agregarCargoDataBase(Cargo cargo) {
