@@ -23,6 +23,15 @@ public class Banco {
         banco.agregarCargoDataBase(nuevoCargo);
     }
 
+    ///////////////////CONSULTAS PEDIDAS QUE DEBE HACER LA APP///////////////////////
+
+    /*
+    EN ESTA SECCION SE HARAN LAS CONSULTAS (5?), PEDIDAS POR EL PROFESOR
+     */
+
+
+    /////////////////////////////////////////////////////////////////////////////////
+
     public void verificarCargo(String codigo) {
         String sql = "SELECT * FROM TCargo WHERE CCodigo = ?";
         try (Connection conexion = BaseDeDatosUtil.obtenerConexion();
@@ -92,8 +101,7 @@ public class Banco {
             conexion = BaseDeDatosUtil.obtenerConexion();
             System.out.println("Conexión establecida con éxito.");
 
-            // Asegurarse de que la conexión no esté en modo autocommit
-            conexion.setAutoCommit(false);
+
 
             // Preparar la declaración
             declaracion = conexion.prepareStatement(sql);
@@ -109,8 +117,7 @@ public class Banco {
             int filasAfectadas = declaracion.executeUpdate();
             System.out.println("Declaración ejecutada. Filas afectadas: " + filasAfectadas);
 
-            // Confirmar la transacción manualmente
-            conexion.commit();
+
             System.out.println("Transacción confirmada.");
 
             if (filasAfectadas > 0) {
