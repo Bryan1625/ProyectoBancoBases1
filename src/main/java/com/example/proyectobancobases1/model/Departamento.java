@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 public class Departamento {
     private String codigo, nombre;
-    private int poblacion;
+    private double poblacion;
     private ArrayList<Municipio> municipios;
 
-    public Departamento(String codigo, String nombre,int poblacion, ArrayList<Municipio> municipios) {
+    public Departamento(String codigo, String nombre,double poblacion, ArrayList<Municipio> municipios) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.poblacion = poblacion;
@@ -17,7 +17,7 @@ public class Departamento {
 
     }
 
-    public Departamento(String codigo, String nombre,int poblacion){
+    public Departamento(String codigo, String nombre,double poblacion){
         this.codigo = codigo;
         this.nombre = nombre;
         this.poblacion = poblacion;
@@ -48,11 +48,11 @@ public class Departamento {
         this.municipios = municipios;
     }
 
-    public int getPoblacion() {
+    public double getPoblacion() {
         return poblacion;
     }
 
-    public void setPoblacion(int poblacion) {
+    public void setPoblacion(double poblacion) {
         this.poblacion = poblacion;
     }
 }

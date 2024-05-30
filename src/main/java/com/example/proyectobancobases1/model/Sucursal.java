@@ -53,7 +53,7 @@ public class Sucursal {
         return presupuestoAnual;
     }
 
-    public void setPresupuestoAnual(int presupuestoAnual) {
+    public void setPresupuestoAnual(double presupuestoAnual) {
         this.presupuestoAnual = presupuestoAnual;
     }
 }

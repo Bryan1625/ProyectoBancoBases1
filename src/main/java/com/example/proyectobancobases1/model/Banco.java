@@ -76,9 +76,24 @@ public class Banco {
             inicializarTiposMunicipios(BaseDeDatosUtil.obtenerConexion());
             inicializarUsuarios(BaseDeDatosUtil.obtenerConexion());
 
+            imprimirSegundosElementos();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void imprimirSegundosElementos() {
+        System.out.println("Departamentos con sede:");
+        for (Departamento departamento : departamentosConSede) {
+            System.out.println(departamento.getNombre());
+        }
+
+        // Imprimir todos los elementos de empleados
+        System.out.println("Empleados:");
+        for (Empleado empleado : empleados) {
+            System.out.println(empleado.getNombre());
+
         }
     }
 
@@ -104,7 +119,13 @@ public class Banco {
             while (resultSet.next()) {
                 Contrato contrato = new Contrato();
                 contrato.setNumero(resultSet.getString("CNumero"));
-                // Establecer los demás atributos...
+                contrato.setFecha(resultSet.getDate("CFecha").toLocalDate());
+                contrato.setFechaInicio(resultSet.getDate("CFechaInicio").toLocalDate());
+                contrato.setFechaTerminacion(resultSet.getDate("CFechaTerminacion").toLocalDate());
+                contrato.setSucursal(buscarSucursal(resultSet.getString("CSucursal")));
+                contrato.setEmpleado(buscarEmpleado(resultSet.getString("CEmpleado")));
+                contrato.setCargo(buscarCargo(resultSet.getString("CCargo")));
+                contrato.setDescripcion(resultSet.getString("CDescripcion"));
                 this.contratos.add(contrato);
             }
         } catch (SQLException e) {
@@ -120,7 +141,9 @@ public class Banco {
             while (resultSet.next()) {
                 Departamento departamento = new Departamento();
                 departamento.setCodigo(resultSet.getString("DCodigo"));
-                // Establecer los demás atributos...
+                departamento.setNombre(resultSet.getString("DNombre"));
+                departamento.setPoblacion(resultSet.getDouble("DPoblacion"));
+
                 this.departamentosConSede.add(departamento);
             }
         } catch (SQLException e) {
@@ -136,7 +159,11 @@ public class Banco {
             while (resultSet.next()) {
                 Municipio municipio = new Municipio();
                 municipio.setCodigo(resultSet.getString("MCodigo"));
-                // Establecer los demás atributos...
+                municipio.setNombre(resultSet.getString("MNombre"));
+                municipio.setPoblacion(resultSet.getDouble("MPoblacion"));
+                municipio.setDepartamento(resultSet.getString("Depto"));
+                municipio.setDepartamento(resultSet.getString("Depto"));
+                municipio.setTipoMunicipio(buscarTipoMunicipio(resultSet.getString("TipoMunicipio")));
                 this.municipiosConSede.add(municipio);
             }
         } catch (SQLException e) {
@@ -154,7 +181,6 @@ public class Banco {
                 empleado.setCodigo(resultSet.getString("ECodigo"));
                 empleado.setNombre(resultSet.getString("ENombre"));
                 empleado.setCedula(resultSet.getString("ECedula"));
-                empleado.setContrato(buscarContrato(resultSet.getString("EContrato")));
                 empleado.setDireccion(resultSet.getString("EDireccion"));
                 empleado.setGenero(resultSet.getString("EGenero"));
                 empleado.setTelefono(resultSet.getString("ETelefono"));
@@ -174,7 +200,10 @@ public class Banco {
             while (resultSet.next()) {
                 Sucursal sucursal = new Sucursal();
                 sucursal.setCodigo(resultSet.getString("SCodigo"));
-                // Establecer los demás atributos...
+                sucursal.setNombre(resultSet.getString("SNombre"));
+                sucursal.setMunicipio(buscarMunicipioConSede(resultSet.getString("SMunicipio")));
+                sucursal.setDepartamento(buscarDepartamentoConSede(resultSet.getString("SDepartamento")));
+                sucursal.setPresupuestoAnual(resultSet.getDouble("SPresupuesto"));
                 this.sucursales.add(sucursal);
             }
         } catch (SQLException e) {
@@ -190,7 +219,7 @@ public class Banco {
             while (resultSet.next()) {
                 TipoMunicipio tipoMunicipio = new TipoMunicipio();
                 tipoMunicipio.setCodigo(resultSet.getString("TMCodigo"));
-                // Establecer los demás atributos...
+                tipoMunicipio.setNombre(resultSet.getString("TMNombre"));
                 this.tiposMunicipios.add(tipoMunicipio);
             }
         } catch (SQLException e) {
@@ -206,7 +235,9 @@ public class Banco {
             while (resultSet.next()) {
                 Usuario usuario = new Usuario();
                 usuario.setUsuario(resultSet.getString("ULogin"));
-                // Establecer los demás atributos...
+                usuario.setContrasenia(resultSet.getString("UClave"));
+                usuario.setEmpleado(buscarEmpleado(resultSet.getString("UEmpleado")));
+                usuario.setFechaCreacion(resultSet.getDate("UFechaCre").toLocalDate());
                 this.usuarios.add(usuario);
             }
         } catch (SQLException e) {
@@ -222,7 +253,7 @@ public class Banco {
             while (resultSet.next()) {
                 Profesion profesion = new Profesion();
                 profesion.setCodigo(resultSet.getString("PCodigo"));
-                // Establecer los demás atributos...
+                profesion.setNombre(resultSet.getString("PNombre"));
                 this.profesiones.add(profesion);
             }
         } catch (SQLException e) {
@@ -508,7 +539,6 @@ public class Banco {
 
             if (filasAfectadas > 0) {
                 System.out.println("El cargo con código " + cargo.getCodigo() + " ha sido eliminado.");
-                cargos.remove(cargo);
             } else {
                 System.out.println("No se pudo eliminar el cargo con código " + cargo.getCodigo() + ".");
             }
@@ -544,10 +574,17 @@ public class Banco {
 
     public void eliminarCargo(Cargo cargo) {
         eliminarCargoDataBase(cargo);
+        cargos.remove(cargo);
     }
 
     public void actualizarCargo(Cargo cargo) {
         actualizarCargoDataBase(cargo);
+        for (int i = 0; i < cargos.size(); i++) {
+            if (cargos.get(i).getCodigo().equals(cargo.getCodigo())) {
+                cargos.set(i, cargo);
+                break;
+            }
+        }
     }
 
     public Cargo buscarCargo(String codigo) {
@@ -655,7 +692,7 @@ public class Banco {
 
             if (filasAfectadas > 0) {
                 System.out.println("El contrato con número " + contrato.getNumero() + " ha sido eliminado.");
-                contratos.remove(contrato);
+
             } else {
                 System.out.println("No se pudo eliminar el contrato con número " + contrato.getNumero() + ".");
             }
@@ -692,10 +729,17 @@ public class Banco {
 
     public void eliminarContrato(Contrato contrato) {
         eliminarContratoDataBase(contrato);
+        contratos.remove(contrato);
     }
 
     public void actualizarContrato(Contrato contrato) {
         actualizarContratoDataBase(contrato);
+        for (int i = 0; i < contratos.size(); i++) {
+            if (contratos.get(i).getNumero().equals(contrato.getNumero())) {
+                contratos.set(i, contrato);
+                break;
+            }
+        }
     }
 
     public Contrato buscarContrato(String codigo) {
@@ -747,7 +791,7 @@ public class Banco {
 
             if (filasAfectadas > 0) {
                 System.out.println("El departamento con código " + departamento.getCodigo() + " ha sido eliminado.");
-                departamentosConSede.remove(departamento);
+
             } else {
                 System.out.println("No se pudo eliminar el departamento con código " + departamento.getCodigo() + ".");
             }
@@ -782,10 +826,17 @@ public class Banco {
 
     public void eliminarDepartamentoConSede(Departamento departamento) {
         eliminarDepartamentoConSedeDataBase(departamento);
+        departamentosConSede.remove(departamento);
     }
 
     public void actualizarDepartamentoConSede(Departamento departamento) {
         actualizarDepartamentoConSedeDataBase(departamento);
+        for (int i = 0; i < departamentosConSede.size(); i++) {
+            if (departamentosConSede.get(i).getCodigo().equals(departamento.getCodigo())) {
+                departamentosConSede.set(i, departamento);
+                break;
+            }
+        }
     }
 
     public Departamento buscarDepartamentoConSede(String codigo) {
@@ -909,7 +960,7 @@ public class Banco {
 
             if (filasAfectadas > 0) {
                 System.out.println("El municipio con código " + municipio.getCodigo() + " ha sido eliminado.");
-                municipiosConSede.remove(municipio);
+
             } else {
                 System.out.println("No se pudo eliminar el municipio con código " + municipio.getCodigo() + ".");
             }
@@ -944,10 +995,17 @@ public class Banco {
 
     public void eliminarMunicipioConSede(Municipio municipio) {
         eliminarMunicipioConSedeDataBase(municipio);
+        municipiosConSede.remove(municipio);
     }
 
     public void actualizarMunicipioConSede(Municipio municipio) {
         actualizarMunicipioConSedeDataBase(municipio);
+        for (int i = 0; i < municipiosConSede.size(); i++) {
+            if (municipiosConSede.get(i).getCodigo().equals(municipio.getCodigo())) {
+                municipiosConSede.set(i, municipio);
+                break;
+            }
+        }
     }
 
     public Municipio buscarMunicipioConSede(String codigo) {
@@ -1021,7 +1079,7 @@ public class Banco {
 
             if (filasAfectadas > 0) {
                 System.out.println("El empleado con código " + empleado.getCodigo() + " ha sido eliminado.");
-                empleados.remove(empleado);
+
             } else {
                 System.out.println("No se pudo eliminar el empleado con código " + empleado.getCodigo() + ".");
             }
@@ -1064,11 +1122,19 @@ public class Banco {
 
     public void eliminarEmpleado(Empleado empleado) {
         eliminarEmpleadoDataBase(empleado);
+        empleados.remove(empleado);
     }
 
     public void actualizarEmpleado(Empleado empleado) {
         actualizarEmpleadoDataBase(empleado);
+        for (int i = 0; i < empleados.size(); i++) {
+            if (empleados.get(i).getCodigo().equals(empleado.getCodigo())) {
+                empleados.set(i, empleado);
+                break;
+            }
+        }
     }
+
 
     public Empleado buscarEmpleado(String codigo) {
         for (Empleado empleado : empleados) {
@@ -1119,7 +1185,7 @@ public class Banco {
 
             if (filasAfectadas > 0) {
                 System.out.println("La sucursal con código " + sucursal.getCodigo() + " ha sido eliminada.");
-                sucursales.remove(sucursal);
+
             } else {
                 System.out.println("No se pudo eliminar la sucursal con código " + sucursal.getCodigo() + ".");
             }
@@ -1154,10 +1220,17 @@ public class Banco {
 
     public void eliminarSucursal(Sucursal sucursal) {
         eliminarSucursalDataBase(sucursal);
+        sucursales.remove(sucursal);
     }
 
     public void actualizarSucursal(Sucursal sucursal) {
         actualizarSucursalDataBase(sucursal);
+        for (int i = 0; i < sucursales.size(); i++) {
+            if (sucursales.get(i).getCodigo().equals(sucursal.getCodigo())) {
+                sucursales.set(i, sucursal);
+                break;
+            }
+        }
     }
 
     public Sucursal buscarSucursal(String codigo) {
@@ -1209,7 +1282,7 @@ public class Banco {
 
             if (filasAfectadas > 0) {
                 System.out.println("El tipo de municipio con código " + tipoMunicipio.getCodigo() + " ha sido eliminado.");
-                tiposMunicipios.remove(tipoMunicipio);
+
             } else {
                 System.out.println("No se pudo eliminar el tipo de municipio con código " + tipoMunicipio.getCodigo() + ".");
             }
@@ -1244,10 +1317,17 @@ public class Banco {
 
     public void eliminarTipoMunicipio(TipoMunicipio tipoMunicipio) {
         eliminarTipoMunicipioDataBase(tipoMunicipio);
+        tiposMunicipios.remove(tipoMunicipio);
     }
 
     public void actualizarTipoMunicipio(TipoMunicipio tipoMunicipio) {
         actualizarTipoMunicipioDataBase(tipoMunicipio);
+        for (int i = 0; i < tiposMunicipios.size(); i++) {
+            if (tiposMunicipios.get(i).getCodigo().equals(tipoMunicipio.getCodigo())) {
+                tiposMunicipios.set(i, tipoMunicipio);
+                break;
+            }
+        }
     }
 
     public TipoMunicipio buscarTipoMunicipio(String codigo) {
@@ -1301,7 +1381,7 @@ public class Banco {
 
             if (filasAfectadas > 0) {
                 System.out.println("El usuario " + usuario.getUsuario() + " ha sido eliminado.");
-                usuarios.remove(usuario);
+
             } else {
                 System.out.println("No se pudo eliminar el usuario " + usuario.getUsuario() + ".");
             }
@@ -1339,10 +1419,17 @@ public class Banco {
 
     public void eliminarUsuario(Usuario usuario) {
         eliminarUsuarioDataBase(usuario);
+        usuarios.remove(usuario);
     }
 
     public void actualizarUsuario(Usuario usuario) {
         actualizarUsuarioDataBase(usuario);
+        for (int i = 0; i < usuarios.size(); i++) {
+            if (usuarios.get(i).getUsuario().equals(usuario.getUsuario())) {
+                usuarios.set(i, usuario);
+                break;
+            }
+        }
     }
 
     public Usuario buscarUsuario(String usuario) {
@@ -1394,7 +1481,7 @@ public class Banco {
 
             if (filasAfectadas > 0) {
                 System.out.println("La profesión con código " + profesion.getCodigo() + " ha sido eliminada.");
-                profesiones.remove(profesion);
+
             } else {
                 System.out.println("No se pudo eliminar la profesión con código " + profesion.getCodigo() + ".");
             }
@@ -1429,10 +1516,17 @@ public class Banco {
 
     public void eliminarProfesion(Profesion profesion) {
         eliminarProfesionDataBase(profesion);
+        profesiones.remove(profesion);
     }
 
     public void actualizarProfesion(Profesion profesion) {
         actualizarProfesionDataBase(profesion);
+        for (int i = 0; i < profesiones.size(); i++) {
+            if (profesiones.get(i).getCodigo().equals(profesion.getCodigo())) {
+                profesiones.set(i, profesion);
+                break;
+            }
+        }
     }
 
     public Profesion buscarProfesion(String codigo) {
