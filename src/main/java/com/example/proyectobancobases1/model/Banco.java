@@ -76,9 +76,7 @@ public class Banco {
             inicializarTiposMunicipios(BaseDeDatosUtil.obtenerConexion());
             inicializarUsuarios(BaseDeDatosUtil.obtenerConexion());
 
-            for (Empleado empleado : empleados) {
-                System.out.println(empleado.getNombre());
-            }
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -491,7 +489,7 @@ public class Banco {
 
             if (filasAfectadas > 0) {
                 System.out.println("El cargo con código " + cargo.getCodigo() + " ha sido agregado.");
-                cargos.add(cargo);
+
             } else {
                 System.out.println("No se pudo agregar el cargo con código " + cargo.getCodigo() + ".");
             }
@@ -541,6 +539,7 @@ public class Banco {
 
     public void agregarCargo(Cargo cargo) {
         agregarCargoDataBase(cargo);
+        cargos.add(cargo);
     }
 
     public void eliminarCargo(Cargo cargo) {
@@ -637,7 +636,7 @@ public class Banco {
 
             if (filasAfectadas > 0) {
                 System.out.println("El contrato con número " + contrato.getNumero() + " ha sido agregado.");
-                contratos.add(contrato);
+
             } else {
                 System.out.println("No se pudo agregar el contrato con número " + contrato.getNumero() + ".");
             }
@@ -688,6 +687,7 @@ public class Banco {
 
     public void agregarContrato(Contrato contrato) {
         agregarContratoDataBase(contrato);
+        contratos.add(contrato);
     }
 
     public void eliminarContrato(Contrato contrato) {
@@ -728,7 +728,7 @@ public class Banco {
 
             if (filasAfectadas > 0) {
                 System.out.println("El departamento con código " + departamento.getCodigo() + " ha sido agregado.");
-                departamentosConSede.add(departamento);
+
             } else {
                 System.out.println("No se pudo agregar el departamento con código " + departamento.getCodigo() + ".");
             }
@@ -777,6 +777,7 @@ public class Banco {
 
     public void agregarDepartamentoConSede(Departamento departamento) {
         agregarDepartamentoConSedeDataBase(departamento);
+        departamentosConSede.add(departamento);
     }
 
     public void eliminarDepartamentoConSede(Departamento departamento) {
@@ -889,7 +890,7 @@ public class Banco {
 
             if (filasAfectadas > 0) {
                 System.out.println("El municipio con código " + municipio.getCodigo() + " ha sido agregado.");
-                municipiosConSede.add(municipio);
+
             } else {
                 System.out.println("No se pudo agregar el municipio con código " + municipio.getCodigo() + ".");
             }
@@ -938,6 +939,7 @@ public class Banco {
 
     public void agregarMunicipioConSede(Municipio municipio) {
         agregarMunicipioConSedeDataBase(municipio);
+        municipiosConSede.add(municipio);
     }
 
     public void eliminarMunicipioConSede(Municipio municipio) {
@@ -1000,7 +1002,7 @@ public class Banco {
 
             if (filasAfectadas > 0) {
                 System.out.println("El empleado con código " + empleado.getCodigo() + " ha sido agregado.");
-                empleados.add(empleado);
+
             } else {
                 System.out.println("No se pudo agregar el empleado con código " + empleado.getCodigo() + ".");
             }
@@ -1057,6 +1059,7 @@ public class Banco {
 
     public void agregarEmpleado(Empleado empleado) {
         agregarEmpleadoDataBase(empleado);
+        empleados.add(empleado);
     }
 
     public void eliminarEmpleado(Empleado empleado) {
@@ -1097,7 +1100,7 @@ public class Banco {
 
             if (filasAfectadas > 0) {
                 System.out.println("La sucursal con código " + sucursal.getCodigo() + " ha sido agregada.");
-                sucursales.add(sucursal);
+
             } else {
                 System.out.println("No se pudo agregar la sucursal con código " + sucursal.getCodigo() + ".");
             }
@@ -1146,6 +1149,7 @@ public class Banco {
 
     public void agregarSucursal(Sucursal sucursal) {
         agregarSucursalDataBase(sucursal);
+        sucursales.add(sucursal);
     }
 
     public void eliminarSucursal(Sucursal sucursal) {
@@ -1186,7 +1190,7 @@ public class Banco {
 
             if (filasAfectadas > 0) {
                 System.out.println("El tipo de municipio con código " + tipoMunicipio.getCodigo() + " ha sido agregado.");
-                tiposMunicipios.add(tipoMunicipio);
+
             } else {
                 System.out.println("No se pudo agregar el tipo de municipio con código " + tipoMunicipio.getCodigo() + ".");
             }
@@ -1235,6 +1239,7 @@ public class Banco {
 
     public void agregarTipoMunicipio(TipoMunicipio tipoMunicipio) {
         agregarTipoMunicipioDataBase(tipoMunicipio);
+        tiposMunicipios.add(tipoMunicipio);
     }
 
     public void eliminarTipoMunicipio(TipoMunicipio tipoMunicipio) {
@@ -1370,7 +1375,7 @@ public class Banco {
 
             if (filasAfectadas > 0) {
                 System.out.println("La profesión con código " + profesion.getCodigo() + " ha sido agregada.");
-                profesiones.add(profesion);
+
             } else {
                 System.out.println("No se pudo agregar la profesión con código " + profesion.getCodigo() + ".");
             }
@@ -1419,6 +1424,7 @@ public class Banco {
 
     public void agregarProfesion(Profesion profesion) {
         agregarProfesionDataBase(profesion);
+        profesiones.add(profesion);
     }
 
     public void eliminarProfesion(Profesion profesion) {
